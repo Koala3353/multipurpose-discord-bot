@@ -56,9 +56,12 @@ public class CommandManager {
         addCommand(new UptimeCOmmand());
         addCommand(new InfoUserCommand());
         addCommand(new InfoServerCommand());
+        addCommand(new ShareCreditCommand());
         addCommand(new RegisterCommand());
         addCommand(new SetPrefixCommand());
+        addCommand(new DropCommand());
         addCommand(new MathCommand());
+        addCommand(new LeaderboardCommand());
 
         //mini Games
         addCommand(new ChessRequest());

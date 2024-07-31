@@ -68,7 +68,7 @@ public class TriviaCommand implements ICommand {
         embedBuilder.addField("Difficulty: ", obj.getDifficulty(), true);
         embedBuilder.addField("Question: ", ctx.getAuthor().getAsMention() + " " + msg, false);
         embedBuilder.setColor(Color.cyan);
-        embedBuilder.setFooter("A correct answer will give you \uD83E\uDE99 1000");
+        embedBuilder.setFooter("A correct answer will give you at least 1,000 credits!!!");
         ctx.getChannel().sendMessageEmbeds(embedBuilder.build()).setActionRow(menu.build()).queue();
         storeQuestion.put(ctx.getAuthor(), msg);
         storeDifficulty.put(ctx.getAuthor(), obj.getDifficulty());

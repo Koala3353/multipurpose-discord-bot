@@ -7,9 +7,11 @@ import com.general_hello.commands.commands.GroupOfGames.Blackjack.BlackjackGame;
 import com.general_hello.commands.commands.GroupOfGames.Blackjack.GameHandler;
 import com.general_hello.commands.commands.GroupOfGames.MiniGames.ChessStoring;
 import com.general_hello.commands.commands.GroupOfGames.MiniGames.MainChessCode;
+import com.general_hello.commands.commands.Info.InfoUserCommand;
 import com.general_hello.commands.commands.PrefixStoring;
 import com.general_hello.commands.commands.RankingSystem.LevelPointManager;
 import com.general_hello.commands.commands.Register.Data;
+import com.general_hello.commands.commands.Utils.UtilNum;
 import com.github.bhlangonijr.chesslib.Board;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -23,6 +25,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.time.OffsetDateTime;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class OnButtonClick extends ListenerAdapter {
@@ -48,6 +51,21 @@ public class OnButtonClick extends ListenerAdapter {
 
         switch (type)
         {
+            case "claim":
+                event.deferEdit().queue();
+                int randomNum = UtilNum.randomNum(-10000, 50000);
+                DatabaseManager.INSTANCE.setCredits(event.getUser().getIdLong(), randomNum);
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setTitle("New Chest Drop!!!").setTimestamp(OffsetDateTime.now()).setColor(InfoUserCommand.randomColor());
+                embedBuilder.setDescription("A new chest has been found! And " + event.getMember().getAsMention() + " was the first one to open it!\n" +
+                        "\n" +
+                        "Rewards:\n" +
+                        "```java\n" +
+                        randomNum + " credits" +
+                        "\n```");
+                embedBuilder.setThumbnail("https://images-ext-1.discordapp.net/external/0dJA-6psG7nT0aDt0JqdHSwjcV9DsgROnN0gUspYeJs/https/cdn.discordapp.com/emojis/861390923640471572.gif");
+                event.getMessage().editMessageEmbeds(embedBuilder.build()).setActionRow(Button.of(ButtonStyle.SUCCESS, "OPENEDCHEST", "Claimed by " + event.getMember().getEffectiveName()).asDisabled(), Button.of(ButtonStyle.DANGER, "IGNOREME", "Next Drop soon").asDisabled()).queue();
+                break;
             case "nope":
             case "end":
                 event.getMessage().delete().queue();
@@ -141,7 +159,7 @@ public class OnButtonClick extends ListenerAdapter {
 
                 String prefix = PrefixStoring.PREFIXES.computeIfAbsent(guildID, (ids) -> Config.get("prefix"));
 
-                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle("Groups");
                 embedBuilder.setColor(Color.cyan);
                 embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.USER + " | User (10)", "Shows basic to complex commands that the user can do with the bot", false);
@@ -413,10 +431,9 @@ public class OnButtonClick extends ListenerAdapter {
                 embedBuilder.addField("9.) Make Facts Command", "`" + prefix + " makefacts`", false);
                 embedBuilder.addField("10.) Quote Command", "`" + prefix + " quote`", false);
                 embedBuilder.addField("11.) Share code Command (Programming)", "`" + prefix + " sharecode`", false);
-                embedBuilder.addField("12.) Akinator Command *NOT WORKING*", "`" + prefix + " aki`", false);
-                embedBuilder.addField("13.) Rock Paper Scissors Command", "`" + prefix + " rps`", false);
-                embedBuilder.addField("14.) Connect 4 Command *NOT WORKING*", "`" + prefix + " c4`", false);
-                embedBuilder.addField("15.) Tic Tac Toe Command *NOT WORKING*", "`" + prefix + " ttt`", false);
+                embedBuilder.addField("12.) Preview Website Command", "`" + prefix + " preview`", false);
+                embedBuilder.addField("13.) Share Credits command", "`" + prefix + " share`", false);
+                embedBuilder.addField("14.) Leaderboard Credits command", "`" + prefix + " lb`", false);
 
                 embedBuilder.setFooter("Type " + prefix + " help [command name] to see what they do");
                 break;

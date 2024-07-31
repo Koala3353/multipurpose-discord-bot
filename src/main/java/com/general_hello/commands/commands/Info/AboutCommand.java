@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 
 import java.awt.*;
+import java.lang.management.ManagementFactory;
 
 public class AboutCommand implements ICommand {
     String[] featureses = new String[2];
@@ -47,28 +48,18 @@ public class AboutCommand implements ICommand {
         StringBuilder descr = new StringBuilder().append("Hello! I am **").append(event.getSelfUser().getName()).append("**, ")
                 .append(description).append("\nI ").append(IS_AUTHOR ? "was written in Java" : "am owned").append(" by **")
                 .append(author).append("** using " + "JDA Utils [Commands Extension](" + JDAUtilitiesInfo.GITHUB + ") (")
-                .append(JDAUtilitiesInfo.VERSION).append(") and the [JDA library](" + JDAInfo.GITHUB + ")")
+                .append(") and the [JDA library](" + JDAInfo.GITHUB + ")")
                 .append("\nType `").append(prefix).append("help")
-                .append("` to see my commands!").append(join || inv ? invline : "").append("\n\nSome of my features include: ```html\n");
-       descr.append("IGNITE COINS WALLET: Wondering how much Ignite Coins you have? Wonder no more cause IgntBot will now serve as your digital wallet! Simply register your account to know your balance!\n" +
-               "\n" +
-               "IGNITE FAQs: New to the Ignite Community? Worry not, cause IgntBot got you covered! Ask anything Ignite related and our bot will answer your questions for you! In case the bot doesn't know what to say... just ask us!\n" +
-               "\n" +
-               "MUSIC: Never miss a beat with IgntBot! Simply hop in to a voice channel and enjoy music on demand!\n" +
-               "\n" +
-               "GAMES: IgntBot also contains games that Igniters can play such as UNO, Hangman, Guess the Number and so much more!\n" +
-               "\n" +
-               "MEME GENERATOR: Are you bored and would like to have a good laugh? IgntBot got you covered! Ask for a meme and it'll give you a good one!\n" +
-               "\n" +
-               "BAD WORD BLOCKER: To make COIL a safe space for everybody, IgntBot also blocks inappropriate words in the text channels!");
-        descr.append(" ```");
+                .append("` to see my commands!").append(join || inv ? invline : "").append("\n");
+
 
         descr.append("\n");
-        descr.append("Total memory: ").append((int) (Runtime.getRuntime().totalMemory() * 0.000001)).append(" mb\n");
-        descr.append("Free memory: ").append((int) (Runtime.getRuntime().freeMemory() * 0.000001)).append(" mb\n");
         descr.append("Max memory: ").append((int) (Runtime.getRuntime().maxMemory() * 0.000001)).append(" mb\n");
         descr.append("Memory Usage: ").append((int) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 0.00000001)).append(" mb");
-
+        descr.append("\n");
+        String messageCPU = String.valueOf(ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage()).startsWith("-") ? ("Unavailable") : (ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage() + "%");
+        descr.append("CPU Usage: ");
+        descr.append("\n").append(messageCPU).append("\n\nProcessors: ").append(ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors()).append(" processors");
         //Here
         System.out.println("Total Memory: " + Runtime.getRuntime().totalMemory());
         System.out.println("Free Memory: " + Runtime.getRuntime().freeMemory());

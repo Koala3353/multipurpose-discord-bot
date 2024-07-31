@@ -2,8 +2,7 @@ package com.general_hello.commands.commands.User;
 
 import com.general_hello.commands.Database.DatabaseManager;
 import net.dv8tion.jda.api.entities.User;
-
-public class UserPhoneUser {
+public class UserPhoneUser implements Comparable <UserPhoneUser>{
     private String userPhoneUserName;
     private Integer balance;
     private final User discordUser;
@@ -43,5 +42,9 @@ public class UserPhoneUser {
 
     public User getDiscordUser() {
         return discordUser;
+    }
+
+    public int compareTo(UserPhoneUser upu){
+        return upu.credits - this.credits;
     }
 }

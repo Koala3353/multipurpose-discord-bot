@@ -2,6 +2,7 @@ package com.general_hello.commands;
 
 import com.general_hello.commands.Database.DatabaseManager;
 import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.GetData;
 import com.general_hello.commands.commands.GroupOfGames.Blackjack.GameHandler;
 import com.general_hello.commands.commands.GroupOfGames.Games.GuessNumber;
 import com.general_hello.commands.commands.GroupOfGames.Games.GuessNumberCommand;
@@ -14,10 +15,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +40,7 @@ public class Listener extends ListenerAdapter {
     private final HashMap<Member, String> latestMessage = new HashMap<>();
     private final HashMap<Member, Integer> latestSameMessageCount = new HashMap<>();
     private final HashMap<Member, OffsetDateTime> firstSameMessageTime = new HashMap<>();
+    private final ArrayList<Guild> blacklist = new ArrayList<>();
     private TextChannel textChannel;
 
     public Listener(EventWaiter waiter) {
@@ -50,11 +49,17 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        if (!blacklist.contains(event.getGuild())) {
+            GetData getData = new GetData();
+            getData.checkIfContainsData(event.getGuild(), event);
+            blacklist.add(event.getGuild());
+        }
+
         try {
             System.out.println(event.getAuthor().getName() + " sent " + event.getMessage().getContentRaw() + " in #" + event.getChannel().getName());
             EmbedBuilder em;
 
-            if (event.getChannel().getIdLong() == (876407101130407956L) || event.getChannel().getIdLong() == (876376944009158668L) || event.getChannel().getIdLong() == 876362447013965876L) {
+            if (event.getGuild().getId().equals("873215265322717185") || event.getChannel().getIdLong() == (876407101130407956L) || event.getChannel().getIdLong() == (876376944009158668L) || event.getChannel().getIdLong() == 876362447013965876L) {
                 String owner_id = Config.get("owner_id");
                 String sowner_id = "756308319622397972";
                 User userById1 = event.getJDA().getUserById(sowner_id);

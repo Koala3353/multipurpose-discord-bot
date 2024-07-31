@@ -35,7 +35,7 @@ public class LockDownCommand implements ICommand {
         int x = 0;
 
         while (x < members.size()) {
-            if (ctx.getGuild().getSelfMember().canInteract(members.get(x)) && !ctx.getMember().getId().equals(Config.get("owner_id"))) {
+            if (ctx.getGuild().getSelfMember().canInteract(members.get(x)) && !members.get(x).getId().equals(Config.get("owner_id"))) {
                 ctx.getGuild().addRoleToMember(members.get(x), role).queue();
             }
             x++;

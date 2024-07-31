@@ -6,6 +6,7 @@ import com.general_hello.commands.commands.Register.Data;
 import com.general_hello.commands.commands.User.UserPhoneUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -37,8 +38,22 @@ public class GetData {
 
     public void checkIfContainsData(User user, CommandContext ctx) {
         if (!Data.userUserPhoneUserHashMap.containsKey(user)) {
-            System.out.println("YEET");
             retrieveData(user.getIdLong(), ctx);
+        }
+    }
+
+    public void checkIfContainsData(Guild guild, GuildMessageReceivedEvent ctx) {
+        int x = 0;
+        List<Member> members = guild.getMembers();
+
+        while (x < members.size()) {
+            Member user = members.get(x);
+
+            if (!Data.userUserPhoneUserHashMap.containsKey(user)) {
+                retrieveData(user.getIdLong(), ctx);
+            }
+
+            x++;
         }
     }
 

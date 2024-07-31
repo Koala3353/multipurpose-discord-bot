@@ -66,11 +66,9 @@ public class UpdateIgniteCoinsCommand implements ICommand {
         if (values == null || values.isEmpty()) {
             System.out.println("No data found.");
         } else {
-            System.out.println("Name, Major");
             for (List row : values) {
                 // Print columns A and E, which correspond to indices 0 and 4.
                 String name = row.get(0).toString();
-                System.out.println(name);
                 String[] split = name.split("\\s+");
                 if (split.length > 1) {
 
@@ -85,6 +83,7 @@ public class UpdateIgniteCoinsCommand implements ICommand {
                     if (Data.realNameUserPhoneUserHashMap.containsKey(name)) {
                         UserPhoneUser userPhoneUser = Data.realNameUserPhoneUserHashMap.get(name);
                         userPhoneUser.setBalance(Integer.parseInt(row.get(4).toString()));
+                        Data.realNameUserPhoneUserHashMap.remove(name);
                         Data.realNameUserPhoneUserHashMap.put(name, userPhoneUser);
                     }
                 }
