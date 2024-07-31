@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,9 +46,10 @@ public class BalanceCommand implements ICommand {
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
         embedBuilder.setTitle(user.getName() + "'s Balance").setFooter("Nice balance you have 😀");
         embedBuilder.setDescription("Ignite Coins: **" + (balance == null ? "You are not in the spreadsheet of ignite coins!**\n" :"Press the button for your ignite coins**\n") +
-                "Credits: ** " + userPhoneUser.getCredits() + " credits**\n" +
+                "Credits: ** " + formatter.format(userPhoneUser.getCredits()) + " credits**\n" +
                 "Shekels: **To arrive soon**");
         ctx.getChannel().sendMessageEmbeds(embedBuilder.build()).setActionRow(Button.of(ButtonStyle.PRIMARY, user.getIdLong() + ":balance", "View Coins")).queue();
 
