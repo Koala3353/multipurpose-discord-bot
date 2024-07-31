@@ -2,11 +2,11 @@ package com.general_hello.commands.commands.GroupOfGames.Blackjack;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.ICommand;
-import com.general_hello.commands.commands.Utils.MoneyData;
+import com.general_hello.commands.commands.RankingSystem.LevelPointManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 
-import java.text.DecimalFormat;
+import java.sql.SQLException;
 
 public class BlackjackCommand implements ICommand {
     private GameHandler gameHandler;
@@ -17,32 +17,20 @@ public class BlackjackCommand implements ICommand {
 
 
     @Override
-    public void handle(CommandContext e) throws InterruptedException {
+    public void handle(CommandContext e) throws InterruptedException, SQLException {
         User author = e.getAuthor();
         long playerId = author.getIdLong();
-        int bet = e.getArgs().size() == 0 ? 0 : getInt(e.getArgs().get(0));
-        if (e.getArgs().isEmpty()) {
-            e.getChannel().sendMessage("Are you gonna bet on nothing!!!!").queue();
-            return;
-        }
-        if (e.getArgs().size() != 0 && e.getArgs().get(0).matches("(?i)all(-?in)?")) {
-            bet = (int) Math.round(MoneyData.money.get(author));
-        }
-        if (bet >= 10) {
-            if (MoneyData.money.get(author) - bet >= 0) {
-                BlackjackGame objg = GameHandler.getBlackJackGame(playerId);
+
+         BlackjackGame objg = GameHandler.getBlackJackGame(playerId);
                 if (objg == null) {
-                    BlackjackGame bjg = new BlackjackGame(bet);
+                    BlackjackGame bjg = new BlackjackGame(50);
                     EmbedBuilder eb = bjg.buildEmbed(author.getName(), e.getGuild());
                     if (!bjg.hasEnded()) {
                         GameHandler.putBlackJackGame(playerId, bjg);
                     } else {
-                        Double d = (double) bjg.getWonCreds();
-                        final Double money = MoneyData.money.get(author);
-                        MoneyData.money.put(author, money + d);
-                        int credits = (int) Math.round(MoneyData.money.get(author));
-                        DecimalFormat formatter = new DecimalFormat("#,###.00");
-                        eb.addField("Credits", String.format("You now have %s credits", formatter.format(credits)), false);
+                        double d = bjg.getWonCreds();
+                        LevelPointManager.feed(author, (long) d);
+                        eb.addField("XP points", "You now have more XP points", false);
                     }
                     e.getChannel().sendMessageEmbeds(eb.build()).queue(m -> {
                         if (!bjg.hasEnded()) bjg.setMessageId(m.getIdLong());
@@ -50,13 +38,7 @@ public class BlackjackCommand implements ICommand {
                 } else {
                     e.getChannel().sendMessage("You're already playing a game").queue();
                 }
-            } else {
-                e.getChannel().sendMessage(String.format("You don't have enough credits to make a %d credits bet", bet)).queue();
             }
-        } else {
-            e.getChannel().sendMessage("You need to place a bet for at least 10 credits").queue();
-        }
-    }
 
     @Override
     public String getName() {
