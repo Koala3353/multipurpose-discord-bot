@@ -2,6 +2,9 @@ package com.general_hello.commands.commands.Emoji;
 
 import com.vdurmont.emoji.EmojiParser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Emoji {
     /* General */
     public final static String SUCCESS = EmojiParser.parseToUnicode(":white_check_mark:");
@@ -105,11 +108,11 @@ public class Emoji {
     public final static String NOTES = EmojiParser.parseToUnicode(":notes:");
 
     //custom emoji
-    public final static String DISCORD_BOT = "<a:discord_bot:862895574960701440>";
+    public final static String DISCORD_BOT = "<:discord_bot:862895574960701440>";
     public final static String NITRO = "<a:nitro:870863947241230396>";
     public final static String BABY_YODA = EmojiParser.parseToUnicode("<a:babyyoda:866105061665669140>");
     public final static String LIKE = EmojiParser.parseToUnicode("<a:like:866105060140646410>");
-    public final static String BOOK = EmojiParser.parseToUnicode("<a:book:866105059851239444>");
+    public final static String BOOK = EmojiParser.parseToUnicode("<a:bookmoving:866105059851239444>");
     public final static String THANKS = EmojiParser.parseToUnicode("<a:thanks:863989523461177394>");
     public final static String QUESTION = EmojiParser.parseToUnicode("<a:question:863989523368247346>");
     public final static String VERIFY = EmojiParser.parseToUnicode("<a:verify:863204252188672000>");
@@ -120,6 +123,7 @@ public class Emoji {
     public final static String LOADING = EmojiParser.parseToUnicode("<a:loading:870870083285712896>");
     public final static String ARROW_POINTING_RIGHT = EmojiParser.parseToUnicode("<a:arrow_1:862525611465113640>");
     public final static String ARROW_POINTING_LEFT = EmojiParser.parseToUnicode("<a:arrow_2:862525611443879966>");
+    public final static String USER_COIN = EmojiParser.parseToUnicode("<:userphonecoin:872996023570661397>");
 
     /* Server Emotes */
     public final static String GUILD_ONLINE = "🟢";
@@ -132,10 +136,35 @@ public class Emoji {
     public final static String UNCHECK = "<:xmark:314349398824058880>";
     public final static String NOCHECK = "<:empty:314349398723264512>";
 
-    public class Unicode {
-        public final static String zero_width = "\u200B";
-    }
+    //chess emoji
+    public final static String BBISHOP = "<:bbishop:880972626053439528>";
+    public final static String BQUEEN = "<:bqueen:880972625889861672>";
+    public final static String BKNIGHT = "<:bknight:880972625722105937>";
+    public final static String BPAWN = "<:bpawn:880972625680171038>";
+    public final static String BKING = "<:bking:880972625663381575>";
+    public final static String WKING = "<:wking:880972625642422283>";
+    public final static String WBISHOP = "<:wbishop:880972625617240124>";
+    public final static String WKNIGHT = "<:wknight:880972625453678632>";
+    public final static String WQUEEN = "<:wqueen:880972625365565450>";
+    public final static String BROOK = "<:brook:880972625348796467>";
+    public final static String WPAWN = "<:wpawn:880972625302683709>";
+    public final static String WROOK = "<:wrook:880972624824512513>";
 
+    public static EmojiObject customEmojiToEmote(String customEmoji) {
+        customEmoji = customEmoji.replace("<", "");
+        customEmoji = customEmoji.replace(">", "");
+
+        String[] split = customEmoji.split(":");
+        ArrayList<String> splitList = new ArrayList<>(Arrays.asList(split));
+        boolean isAnimate = false;
+        if (split[0].equals("a")) {
+            isAnimate = true;
+        }
+
+        System.out.println(splitList);
+
+        return new EmojiObject(splitList.get(1), isAnimate, Long.parseLong(splitList.get(2)));
+    }
     public static String stringToEmoji(String input)
     {
         StringBuilder output = new StringBuilder();
