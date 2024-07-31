@@ -2,11 +2,11 @@ package com.general_hello.commands.SlashCommands;
 
 import com.general_hello.commands.Bot;
 import com.general_hello.commands.Config;
+import com.general_hello.commands.OtherEvents.OnReadyEvent;
 import com.general_hello.commands.commands.DefaultCommands.HelpSlashCommand;
 import com.general_hello.commands.commands.DefaultCommands.PingSlashCommand;
-import com.general_hello.commands.commands.RankingSystem.SlashCommandContext;
-import com.general_hello.commands.commands.RankingSystem.SlashRankCommand;
-import com.general_hello.commands.commands.RankingSystem.XPAlertCommand;
+import com.general_hello.commands.commands.Music.*;
+import com.general_hello.commands.commands.RankingSystem.ViewRankSlashCommand;
 import com.general_hello.commands.commands.Register.RegisterSlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -44,19 +44,24 @@ public class SlashCommandHandler
         registeredGuildCommands = new ConcurrentHashMap<>();
     }
 
-    public void initialize()
+    public static void initialize()
     {
         commandUpdateAction = Bot.jda.updateCommands();
         registerAllCommands();
     }
 
-    public void registerAllCommands()
+    public static void registerAllCommands()
     {
-        registerCommand(new SlashRankCommand());
+        registerCommand(new ViewRankSlashCommand());
         registerCommand(new PingSlashCommand());
-        registerCommand(new XPAlertCommand());
-        registerCommand(new HelpSlashCommand());
         registerCommand(new RegisterSlashCommand());
+        registerCommand(new HelpSlashCommand());
+        registerCommand(new PauseCommand());
+        registerCommand(new PlayCommand());
+        registerCommand(new QueueCommand());
+        registerCommand(new RepeatCommand());
+        registerCommand(new SkipCommand());
+        registerCommand(new VolumeCommand());
     }
 
     public static void updateCommands(Consumer<List<Command>> success, Consumer<Throwable> failure)
@@ -68,7 +73,7 @@ public class SlashCommandHandler
             List<SlashCommand> slashCommands = entrySet.getValue();
             if (guildID == null || slashCommands == null) continue;
             if (slashCommands.isEmpty()) continue;
-            Guild guild = Bot.jda.getShardManager().getGuildById(guildID);
+            Guild guild = Bot.jda.getGuildById(guildID);
             if (guild == null) continue;
             CommandListUpdateAction guildCommandUpdateAction = guild.updateCommands();
             for (SlashCommand cmd : slashCommands)
@@ -79,7 +84,7 @@ public class SlashCommandHandler
         }
     }
 
-    private void registerCommand(SlashCommand command)
+    private static void registerCommand(SlashCommand command)
     {
         if (!command.isGlobal())
         {
@@ -102,13 +107,15 @@ public class SlashCommandHandler
             return;
         }
 
-        commandUpdateAction.addCommands(command.getCommandData());
+        System.out.println("Added " + command.getCommandName() + " to the bot!");
+        commandUpdateAction.addCommands(command.getCommandData()).queue();
         registeredCommands.add(command);
     }
 
 
     public static void handleSlashCommand(@NotNull SlashCommandEvent event, @Nullable Member member)
     {
+        System.out.println(event.getName());
         Runnable r = () ->
         {
             boolean foundCommand = false;
@@ -224,6 +231,10 @@ public class SlashCommandHandler
                 {
                      path.append(" ").append(option.getName()).append(":").append("`").append(option.getAsString()).append("`");
                 }
+
+                if (path.toString().equals("/rank")) {
+                    return;
+                }
                 EmbedBuilder builder = new EmbedBuilder()
                         .setTitle("An error occurred while executing a slash-command!")
                         .addField("Guild", (event.getGuild() == null ? "None (Direct message)" : event.getGuild().getIdLong()+" ("+event.getGuild().getName()+")"),true)
@@ -242,5 +253,7 @@ public class SlashCommandHandler
                 event.reply("An unknown error occurred! The owner of the bot has been notified of this!").setEphemeral(true).queue(s -> {}, ex -> {});
             }
         };
+
+        OnReadyEvent.scheduledExecutorService.execute(r);
     }
 }
