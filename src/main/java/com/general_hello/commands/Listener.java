@@ -1,7 +1,6 @@
 package com.general_hello.commands;
 
 import com.general_hello.commands.Database.DatabaseManager;
-import com.general_hello.commands.OtherEvents.OtherEvents;
 import com.general_hello.commands.commands.Emoji.Emoji;
 import com.general_hello.commands.commands.GroupOfGames.Games.TriviaCommand;
 import com.general_hello.commands.commands.PrefixStoring;
@@ -23,7 +22,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +31,6 @@ public class Listener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
     public static HashMap<String, Integer> count = new HashMap<>();
     public static JDA jda;
-    public static ArrayList<Long> blackListDbCheck = new ArrayList<>();
-    private static boolean oof = true;
 
     public Listener(EventWaiter waiter) {
         manager = new CommandManager(waiter);
@@ -42,6 +38,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        System.out.println(event.getAuthor().getName() + " sent " + event.getMessage().getContentRaw() + " in " + event.getChannel().getName());
         EmbedBuilder em;
 
         if (event.getAuthor().isBot() || event.isWebhookMessage()) {
@@ -50,14 +47,6 @@ public class Listener extends ListenerAdapter {
 
         Message m = (event).getMessage();
 
-        if(!m.getAuthor().isBot()) // ignore bot messages
-        {
-            // Store the message
-            OtherEvents.messageCache.putMessage(m);
-
-            // Run automod on the message
-            OtherEvents.autoMod.performAutomod(m);
-        }
         //add xp :D
         LevelPointManager.feed(event.getAuthor());
 

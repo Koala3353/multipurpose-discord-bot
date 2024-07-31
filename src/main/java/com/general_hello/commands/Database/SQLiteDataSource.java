@@ -1,21 +1,16 @@
 package com.general_hello.commands.Database;
 
 import com.general_hello.commands.Config;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
 
 public class SQLiteDataSource implements DatabaseManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(SQLiteDataSource.class);
-    public static HikariDataSource ds;
-    public static HashMap<Long, Long> userToXpQueue = new HashMap<>();
-    public static HashMap<Long, Integer> userToXpQueueSize = new HashMap<>();
+    public static Connection connection = null;
 
     public SQLiteDataSource() {
         try {
@@ -34,14 +29,11 @@ public class SQLiteDataSource implements DatabaseManager {
         }
 
 
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:sqlite:database.db");
-        config.setConnectionTestQuery("SELECT 1");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-        ds = new HikariDataSource(config);
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:database.db");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Opened database successfully");
 
@@ -89,6 +81,8 @@ public class SQLiteDataSource implements DatabaseManager {
 
     @Override
     public String getPrefix(long guildId) {
+        System.out.println("Get prefix");
+
         try (final PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("SELECT prefix FROM guild_settings WHERE guild_id = ?")) {
 
@@ -116,6 +110,8 @@ public class SQLiteDataSource implements DatabaseManager {
 
     @Override
     public void setPrefix(long guildId, String newPrefix) {
+        System.out.println("Set prefix");
+
         try (final PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("UPDATE guild_settings SET prefix = ? WHERE guild_id = ?")) {
 
@@ -144,116 +140,54 @@ public class SQLiteDataSource implements DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
     @Override
     public Integer getXpPoints(long userId) throws SQLException {
+        System.out.println("Get XP points");
         try {
-            Thread.sleep(1000);
-        } catch (Exception ignored) {}
+            Statement statement = getConnection().createStatement();
+            String sql = "SELECT xpPoints FROM XPSystemUser WHERE userId=" + userId;
 
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection
-                     .prepareStatement("SELECT xpPoints FROM XPSystemUser WHERE userId = ?")) {
+            ResultSet result = statement.executeQuery(sql);
 
-            preparedStatement.setString(1, String.valueOf(userId));
-
-            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt("xpPoints");
-                }
+            if (result.next()) {
+                return result.getInt("xpPoints");
             }
-
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        try (Connection connection = getConnection();
-             PreparedStatement insertStatement = connection
-                .prepareStatement("INSERT INTO XPSystemUser(userId) VALUES(?)")) {
-
-            insertStatement.setString(1, String.valueOf(userId));
-
-            insertStatement.execute();
-        }
-
-        return 0;
-    }
-
-    @Override
-    public void setXpPoints(long userId, long xpPoints) {
-        if (!userToXpQueueSize.containsKey(userId)) {
-            userToXpQueue.put(userId, xpPoints);
-            userToXpQueueSize.put(userId, 2);
-            return;
-        }
-
-        Integer queue = userToXpQueueSize.get(userId);
-        Long xpQueued = userToXpQueue.get(userId);
-
-        if (queue != 10) {
-            userToXpQueueSize.put(userId, queue + 1);
-            userToXpQueue.put(userId, xpQueued + xpPoints);
-            return;
-        }
-
-        try {
-            Thread.sleep(1000);
-        } catch (Exception ignored) {}
-
         try {
             Statement statement = getConnection().createStatement();
-            String sql = "UPDATE XPSystemUser SET xpPoints=" + (xpQueued + xpPoints) + " WHERE UserId=" + userId;
+            String sql = "INSERT INTO XPSystemUser(userId) VALUES(" + userId + ")";
 
             statement.executeUpdate(sql);
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return -1;
     }
 
     @Override
-    public Integer getGuildSettings(long guildId) throws SQLException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection
-                     .prepareStatement("SELECT XPSystem FROM GuildSettings WHERE GuildId = ?")) {
+    public void setXpPoints(long userId, long xpPoints) {
+        System.out.println("Set XP points");
+        try {
+            System.out.println("Connection closed? " + getConnection().isClosed());
+        } catch (Exception ignored) {}
 
-            preparedStatement.setString(1, String.valueOf(guildId));
+        try {
+            if (getConnection() == null) return;
 
-            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt("XPSystem");
-                }
-            }
+            Statement statement = getConnection().createStatement();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            String sql = "UPDATE XPSystemUser SET xpPoints=" + (xpPoints) + " WHERE UserId=" + userId;
 
-        try (Connection connection = getConnection();
-             PreparedStatement insertStatement = connection
-                     .prepareStatement("INSERT INTO GuildSettings(GuildId) VALUES(?)")) {
-
-            insertStatement.setString(1, String.valueOf(guildId));
-
-            insertStatement.execute();
-        }
-
-        return 0;
-    }
-
-    @Override
-    public void setGuildSettings(long guildId, long enabledOrDisabled) {
-        try (final PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("UPDATE GuildSettings SET XPSystem=? WHERE GuildId=?"
-                )) {
-
-            preparedStatement.setString(2, String.valueOf(guildId));
-            preparedStatement.setString(1, String.valueOf(enabledOrDisabled));
-
-            preparedStatement.executeUpdate();
+            statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -261,6 +195,8 @@ public class SQLiteDataSource implements DatabaseManager {
 
     @Override
     public void newInfo(long userId, String userName) {
+        System.out.println("New info");
+
         try (final PreparedStatement preparedStatement = getConnection()
              .prepareStatement("INSERT INTO UserData" +
                      "(UserId, UserName)" +
@@ -281,6 +217,8 @@ public class SQLiteDataSource implements DatabaseManager {
 
     @Override
     public void setName(long userId, String name) {
+        System.out.println("Set name");
+
         try (final PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("UPDATE UserData SET UserName=? WHERE UserId=?"
                 )) {
@@ -294,6 +232,9 @@ public class SQLiteDataSource implements DatabaseManager {
         }
     }
     public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+        if (connection.isClosed()) {
+            connection = DriverManager.getConnection("jdbc:sqlite:database.db");
+        }
+        return connection;
     }
 }

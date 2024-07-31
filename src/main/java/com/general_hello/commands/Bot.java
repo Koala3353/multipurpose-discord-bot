@@ -2,10 +2,6 @@ package com.general_hello.commands;
 
 import com.general_hello.commands.Database.DatabaseManager;
 import com.general_hello.commands.OtherEvents.*;
-import com.general_hello.commands.SlashCommands.OnSlashCommand;
-import com.general_hello.commands.SlashCommands.SlashCommandHandler;
-import com.general_hello.commands.commands.GroupOfGames.Entertainments.EntertainmentListener;
-import com.general_hello.commands.commands.Utils.MCColor;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import me.duncte123.botcommons.web.WebUtils;
@@ -37,7 +33,7 @@ public class Bot {
         EmbedUtils.setEmbedBuilder(
                 () -> new EmbedBuilder()
                         .setColor(Color.cyan)
-                        .setFooter("ign help")
+                        .setFooter("ignt help")
         );
 
         EventWaiter waiter = new EventWaiter();
@@ -55,15 +51,13 @@ public class Bot {
         )
                 .enableCache(CacheFlag.VOICE_STATE)
                 .addEventListeners(new Listener(waiter), waiter)
-                .addEventListeners(new EntertainmentListener())
-                .addEventListeners(new OnSlashCommand())
                 .addEventListeners(new OnButtonClick())
                 .addEventListeners(new OnPrivateMessage())
                 .addEventListeners(new OtherEvents())
                 .addEventListeners(new OnSelectionMenu())
                 .addEventListeners(new OnButtonChessClick())
                 .addEventListeners(new OnReadyEvent())
-                .setActivity(Activity.watching("ign help"))
+                .setActivity(Activity.watching("ignt help"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL) // enable member chunking for all guilds
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
@@ -91,13 +85,13 @@ public class Bot {
 
             if (s.equalsIgnoreCase("msgshutdown")) {
                 EmbedBuilder embedBuilder = new EmbedBuilder().setTitle("Status").setColor(Color.RED).setFooter("This maintenance is for all Plenary bots").setDescription(jda.getSelfUser().getAsMention() + " is currently offline due to some maintenance!");
-                jda.getTextChannelById(852342009288851516L).sendMessageEmbeds(embedBuilder.build()).queue();
+                jda.getTextChannelById(891816519498096650L).sendMessageEmbeds(embedBuilder.build()).queue();
                 System.out.println("Successfully sent the message!");
             }
 
             if (s.equalsIgnoreCase("msgstart")) {
                 EmbedBuilder embedBuilder = new EmbedBuilder().setTitle("Status").setColor(Color.GREEN).setFooter("This status is for all Plenary bots").setDescription(jda.getSelfUser().getAsMention() + " is now online! The problem has been resolved and the maintenance is complete!");
-                jda.getTextChannelById(852342009288851516L).sendMessageEmbeds(embedBuilder.build()).queue();
+                jda.getTextChannelById(891816519498096650L).sendMessageEmbeds(embedBuilder.build()).queue();
                 System.out.println("Successfully sent the message!");
             }
 
@@ -134,50 +128,8 @@ public class Bot {
             }
 
             if (s.equalsIgnoreCase("startactivity")) {
-                while (true) {
-                    System.out.println("Yeet");
-                    jda.getPresence().setActivity(Activity.watching("Made by General Hello#0101"));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-
-                    jda.getPresence().setActivity(Activity.watching("Happy Moon festival!"));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-
-                    jda.getPresence().setActivity(Activity.watching("ign help"));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-
-                    jda.getPresence().setActivity(Activity.watching("Made by HELLO66#0066"));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-
-                    jda.getPresence().setActivity(Activity.watching("Made by unjown#4644"));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-
-                    jda.getPresence().setActivity(Activity.watching("Design made by SkyacinthClues#0822"));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-
-                    jda.getPresence().setActivity(Activity.watching("Deuteronomy 23 1. No one who has been emasculated by crushing or cutting may enter the assembly of the LORD."));
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (Exception ignored) {}
-                }
+                Status status = new Status();
+                status.status();
             }
 
             if (question) {
@@ -218,10 +170,6 @@ public class Bot {
                 System.out.println("Thank you for using UBCL have a great day!");
                 jda.shutdown();
                 break;
-            }
-
-            if (s.equalsIgnoreCase("updateslashcommand")) {
-                SlashCommandHandler.updateCommands((x) -> System.out.println(MCColor.translate("&aQueued "+x.size()+" commands!")), Throwable::printStackTrace);
             }
         }
     }
