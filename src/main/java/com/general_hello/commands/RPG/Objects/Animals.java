@@ -1,28 +1,28 @@
 package com.general_hello.commands.RPG.Objects;
 
+import com.general_hello.commands.RPG.Items.Uncommon.FishingPole;
 import com.general_hello.commands.RPG.Types.AttainableBy;
 import com.general_hello.commands.RPG.Types.Level;
 import com.general_hello.commands.RPG.Types.Rarity;
 
-public class Weapons {
+public class Animals {
     private final Rarity rarity;
-    private final int damage;
+    private final int rewardForCooking;
     private final String name;
     private Level level;
     private final AttainableBy retrieveBy;
-    private final String emoji;
+    private final Tools toolsToUse;
+    private final String emojiOfItem;
 
-    public Weapons(Rarity rarity, int damage, String name, Level level, AttainableBy retrieveBy, String emoji) {
+    public Animals(Rarity rarity, int rewardForCooking, String name, Level level, AttainableBy retrieveBy, String emojiOfItem) {
         this.rarity = rarity;
-        this.damage = level.getMultipliedValue(rarity.getMultipliedValue(damage));
+        this.rewardForCooking = rarity.getMultipliedValue(rewardForCooking);
         this.name = name;
         this.level = level;
         this.retrieveBy = retrieveBy;
-        this.emoji = emoji;
-    }
-
-    public String getEmoji() {
-        return emoji;
+        // TODO: 11/10/2021 FIX THIS
+        this.toolsToUse = new FishingPole();
+        this.emojiOfItem = emojiOfItem;
     }
 
     public AttainableBy getRetrieveBy() {
@@ -33,17 +33,25 @@ public class Weapons {
         return level;
     }
 
-    public Weapons setLevel(Level level) {
+    public Animals setLevel(Level level) {
         this.level = level;
         return this;
+    }
+
+    public String getEmojiOfItem() {
+        return emojiOfItem;
+    }
+
+    public Tools getToolsToUse() {
+        return toolsToUse;
     }
 
     public Rarity getRarity() {
         return rarity;
     }
 
-    public int getDamage() {
-        return damage;
+    public int getRewardForCooking() {
+        return rewardForCooking;
     }
 
     public String getName() {
