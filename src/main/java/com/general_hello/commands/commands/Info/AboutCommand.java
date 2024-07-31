@@ -3,6 +3,7 @@ package com.general_hello.commands.commands.Info;
 
 import com.general_hello.commands.Config;
 import com.general_hello.commands.commands.CommandContext;
+import com.general_hello.commands.commands.CommandType;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.PrefixStoring;
 import com.jagrosh.jdautilities.commons.JDAUtilitiesInfo;
@@ -48,7 +49,7 @@ public class AboutCommand implements ICommand {
                 .append(author).append("** using " + JDAUtilitiesInfo.AUTHOR + "'s [Commands Extension](" + JDAUtilitiesInfo.GITHUB + ") (")
                 .append(JDAUtilitiesInfo.VERSION).append(") and the [JDA library](https://github.com/DV8FromTheWorld/JDA) (")
                 .append(JDAInfo.VERSION).append(")\nType `").append(prefix).append("help")
-                .append("` to see my commands!").append(join || inv ? invline : "").append("\n\nSome of my features include: ```css\n");
+                .append("` to see my commands!").append(join || inv ? invline : "").append("\n\nSome of my features include: ```html\n");
        descr.append("IGNITE COINS WALLET: Wondering how much Ignite Coins you have? Wonder no more cause IgntBot will now serve as your digital wallet! Simply register your account to know your balance!\n" +
                "\n" +
                "IGNITE FAQs: New to the Ignite Community? Worry not, cause IgntBot got you covered! Ask anything Ignite related and our bot will answer your questions for you! In case the bot doesn't know what to say... just ask us!\n" +
@@ -63,10 +64,15 @@ public class AboutCommand implements ICommand {
         descr.append(" ```");
 
         descr.append("\n");
-        descr.append("Total memory: ").append(Runtime.getRuntime().totalMemory() * 	0.000001).append(" mb\n");
-        descr.append("Free memory: ").append(Runtime.getRuntime().freeMemory() * 0.000001).append(" mb\n");
-        descr.append("Max memory: ").append(Runtime.getRuntime().maxMemory() * 0.000001).append(" mb\n");
-        descr.append("Memory Usage: ").append((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 0.00000001).append(" mb");
+        descr.append("Total memory: ").append((int) (Runtime.getRuntime().totalMemory() * 0.000001)).append(" mb\n");
+        descr.append("Free memory: ").append((int) (Runtime.getRuntime().freeMemory() * 0.000001)).append(" mb\n");
+        descr.append("Max memory: ").append((int) (Runtime.getRuntime().maxMemory() * 0.000001)).append(" mb\n");
+        descr.append("Memory Usage: ").append((int) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 0.00000001)).append(" mb");
+
+        //Here
+        System.out.println("Total Memory: " + Runtime.getRuntime().totalMemory());
+        System.out.println("Free Memory: " + Runtime.getRuntime().freeMemory());
+        System.out.println("Max Memory: " + Runtime.getRuntime().maxMemory());
 
         builder.setDescription(descr);
         event.getJDA().getShardInfo();
@@ -87,5 +93,10 @@ public class AboutCommand implements ICommand {
     public String getHelp(String prefix) {
         return "Shows information about the bot!\n" +
                 "Usage: `" + prefix + "about`";
+    }
+
+    @Override
+    public CommandType getCategory() {
+        return CommandType.SPECIAL;
     }
 }
