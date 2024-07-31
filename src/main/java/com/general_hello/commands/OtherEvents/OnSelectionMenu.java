@@ -1,8 +1,11 @@
 package com.general_hello.commands.OtherEvents;
 
 import com.general_hello.commands.Config;
+import com.general_hello.commands.Database.DatabaseManager;
+import com.general_hello.commands.commands.GroupOfGames.Games.TriviaCommand;
 import com.general_hello.commands.commands.Info.InfoUserCommand;
 import com.general_hello.commands.commands.PrefixStoring;
+import com.general_hello.commands.commands.RankingSystem.LevelPointManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
@@ -31,9 +34,31 @@ public class OnSelectionMenu extends ListenerAdapter {
                 .addOption("Chess", "chess")
                 .build();
         int x = 0;
+        String answer = TriviaCommand.storeAnswer.get(event.getUser());
 
+        System.out.println(event.getSelectedOptions().get(0).getValue());
+        if (TriviaCommand.storeAnswer.containsKey(event.getUser())) {
+            if (event.getSelectedOptions().get(0).getValue().equals(answer)) {
+                event.getChannel().sendMessage("Correct answer!!!!\n" +
+                        "You got \uD83E\uDE99 1,000 for getting the correct answer").queue();
+                LevelPointManager.feed(event.getUser(), 40);
+                DatabaseManager.INSTANCE.setCredits(event.getUser().getIdLong(), 1000);
+                event.deferEdit().queue();
+                event.getMessage().delete().queue();
+                TriviaCommand.storeAnswer.remove(event.getUser());
+            } else {
+                EmbedBuilder e = new EmbedBuilder();
+                e.setTitle("Incorrect answer");
+                e.setFooter("A correct answer gives you \uD83E\uDE99 1,000");
+                e.addField("The correct answer is " + TriviaCommand.storeAnswer.get(event.getUser()), "Better luck next time", false).setColor(Color.RED);
+                event.getChannel().sendMessageEmbeds(e.build()).queue();
+                event.getMessage().delete().queue();
+                TriviaCommand.storeAnswer.remove(event.getUser());
+                event.deferEdit().queue();
+            }
+        }
         while (x < event.getSelectedOptions().size()) {
-            switch (event.getSelectedOptions().get(0).getValue()) {
+            switch (event.getSelectedOptions().get(x).getValue()) {
                 case "reject":
                     event.getUser().openPrivateChannel().complete().sendMessage("Sorry, you are too young to use this bot! (You shouldn't be on Discord!)").queue();
                     event.getMessage().delete().queue();
@@ -56,33 +81,33 @@ public class OnSelectionMenu extends ListenerAdapter {
                     embedBuilder.setDescription(message);
                     embedBuilder.setFooter("Press the Accept button if you accept the rules stated above!");
 
-                    String id = event.getUser().openPrivateChannel().complete().sendMessageEmbeds(embedBuilder.build()).setActionRow(
-                            Button.primary("0000:accept", "Accept").withEmoji(Emoji.fromEmote("verify", Long.parseLong("803768813110951947"), true))
-                    ).complete().getPrivateChannel().getId();
+                    event.getUser().openPrivateChannel().complete().sendMessageEmbeds(embedBuilder.build()).setActionRow(
+                            Button.primary("0000:accept", "Accept").withEmoji(Emoji.fromEmote("verify", 863204252188672000L, true))
+                    ).queue();
                     event.getMessage().delete().queue();
                     return;
                 case "bj":
-                    event.getMessage().editMessageEmbeds(helpCrap(1, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
+                    event.getMessage().delete().queue();
+                    event.getChannel().sendMessageEmbeds(helpCrap(1, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferEdit().queue();
                     break;
                 case "gn":
-                    event.getMessage().editMessageEmbeds(helpCrap(2, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
+                    event.getMessage().delete().queue();
+                    event.getChannel().sendMessageEmbeds(helpCrap(2, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferReply().queue();
-                default:
-                case "hangman":
-                    event.getMessage().editMessageEmbeds(helpCrap(3, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
-                    event.deferEdit().queue();
-                    break;
                 case "trivia":
-                    event.getMessage().editMessageEmbeds(helpCrap(4, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
+                    event.getMessage().delete().queue();
+                    event.getChannel().sendMessageEmbeds(helpCrap(4, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferEdit().queue();
                     break;
                 case "chess":
-                    event.getMessage().editMessageEmbeds(helpCrap(5, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
+                    event.getMessage().delete().queue();
+                    event.getChannel().sendMessageEmbeds(helpCrap(5, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferEdit().queue();
                     break;
                 case "uno":
-                    event.getMessage().editMessageEmbeds(helpCrap(6, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
+                    event.getMessage().delete().queue();
+                    event.getChannel().sendMessageEmbeds(helpCrap(6, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferEdit().queue();
                     break;
             }
@@ -102,9 +127,9 @@ public class OnSelectionMenu extends ListenerAdapter {
                 embedBuilder.setColor(Color.YELLOW);
                 embedBuilder.addField("1.) Start a blackjack game command","`" + prefix + " blackjack`", false);
                 embedBuilder.addField("2.) Hit card command","`" + prefix + " hit`", false);
-                embedBuilder.addField("3.) Stand command","`" + prefix + " hit`", false);
-                embedBuilder.addField("4.) Double command","`" + prefix + " hit`", false);
-                embedBuilder.addField("5.) Split card command","`" + prefix + " hit`", false);
+                embedBuilder.addField("3.) Stand command","`" + prefix + " stand`", false);
+                embedBuilder.addField("4.) Double command","`" + prefix + " double`", false);
+                embedBuilder.addField("5.) Split card command","`" + prefix + " split`", false);
 
                 embedBuilder.setFooter("\nType " + prefix + " help [command name] to see what they do");
                 break;
@@ -114,15 +139,6 @@ public class OnSelectionMenu extends ListenerAdapter {
                 embedBuilder.addField("1.) Start the Guess the number game Command", "`" + prefix + " gn start`", false);
                 embedBuilder.addField("2.) Guess a number Command", "`" + prefix + " gn [number]`", false);
                 embedBuilder.addField("3.) End game Command", "`" + prefix + " gn end`", false);
-
-                embedBuilder.setFooter("\nType " + prefix + " help [command name] to see what they do");
-                break;
-            case 3:
-                embedBuilder.setTitle("Hangman Commands");
-                embedBuilder.setColor(Color.red);
-                embedBuilder.addField("1.) Start hangman game Command", "`" + prefix + " hm start`", false);
-                embedBuilder.addField("2.) Guess a letter Command", "`" + prefix + " hm [letter]`", false);
-                embedBuilder.addField("3.) End game Command", "`" + prefix + " hm end`", false);
 
                 embedBuilder.setFooter("\nType " + prefix + " help [command name] to see what they do");
                 break;

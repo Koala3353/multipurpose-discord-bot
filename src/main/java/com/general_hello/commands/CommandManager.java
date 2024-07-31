@@ -8,7 +8,6 @@ import com.general_hello.commands.commands.DefaultCommands.*;
 import com.general_hello.commands.commands.Emoji.Emoji;
 import com.general_hello.commands.commands.GroupOfGames.Blackjack.*;
 import com.general_hello.commands.commands.GroupOfGames.Games.GuessNumberCommand;
-import com.general_hello.commands.commands.GroupOfGames.Games.HangManCommand;
 import com.general_hello.commands.commands.GroupOfGames.Games.TriviaCommand;
 import com.general_hello.commands.commands.GroupOfGames.MiniGames.ChessRequest;
 import com.general_hello.commands.commands.ICommand;
@@ -20,6 +19,7 @@ import com.general_hello.commands.commands.MusicPlainCommand.*;
 import com.general_hello.commands.commands.Others.*;
 import com.general_hello.commands.commands.RankingSystem.ViewRank;
 import com.general_hello.commands.commands.Register.RegisterCommand;
+import com.general_hello.commands.commands.Register.SetNameCommand;
 import com.general_hello.commands.commands.Uno.ChallengeCommand;
 import com.general_hello.commands.commands.Uno.DrawCommand;
 import com.general_hello.commands.commands.Uno.PlayCardCommand;
@@ -41,11 +41,11 @@ public class CommandManager {
     private final List<ICommand> commands = new ArrayList<>();
     public static ArrayList<String> commandNames = new ArrayList<>();
     public static ArrayList<String> cmdNames = new ArrayList<>();
-    private final long GAMES = 891569196427804672L;
-    private final long MUSIC = 891568732810408007L;
-    private final long WALLET = 891570475220754462L;
+    private final long GAMESC = 891569196427804672L;
+    private final long MUSICC = 891568732810408007L;
+    private final long WALLETC = 891570475220754462L;
     private final boolean testing = false;
-    private final long OTHERS = 892205334721101844L;
+    private final long OTHERSC = 894432361868066846L;
 
     public CommandManager(EventWaiter waiter) {
 
@@ -73,7 +73,6 @@ public class CommandManager {
         addCommand(new PlayCardCommand(gameHandler));
 
         //minigames
-        addCommand(new HangManCommand());
         addCommand(new TriviaCommand());
         addCommand(new GuessNumberCommand());
 
@@ -96,6 +95,8 @@ public class CommandManager {
         addCommand(new ResumeCommand());
         addCommand(new SkipCommand());
         addCommand(new VolumeCommand());
+        addCommand(new StopCommand());
+        addCommand(new LeaveCommand());
 
         //others
         addCommand(new JokeCommand());
@@ -105,6 +106,8 @@ public class CommandManager {
         addCommand(new PasteCommand());
         addCommand(new SayCommand());
         addCommand(new UpdateIgniteCoinsCommand());
+        addCommand(new SetNameCommand());
+        addCommand(new AddCreditsCommand());
     }
 
     private void addCommand(ICommand cmd) {
@@ -159,50 +162,65 @@ public class CommandManager {
 
             EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.RED);
 
-            if (event.getGuild().getIdLong() != 860295266765635584L) {
-                if (!testing) {
+            if (event.getGuild().getIdLong() == 843769353040298011L) {
+                if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(894793721558761483L))) {
+                    event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(894793721558761483L)).queue();
+                }
+
+                    if (!testing) {
                     if (!cmd.getCategory().equals(CommandType.SPECIAL)) {
+                        System.out.println(cmd.getCategory());
                         switch (cmd.getCategory()) {
                             case GAMES:
-                                if (event.getChannel().getIdLong() != (GAMES)) {
+                                if (event.getChannel().getIdLong() != (GAMESC)) {
                                     embedBuilder.setDescription(Emoji.ERROR + " Incorrect text channel!\n" +
-                                            "Go to " + event.getGuild().getGuildChannelById(GAMES).getAsMention() + " and send \n" +
+                                            "Go to " + event.getGuild().getGuildChannelById(GAMESC).getAsMention() + " and send \n" +
                                             "```java\n" +
                                             prefix + " " + invoke + "\n" +
                                             "```");
                                     event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
                                     return;
                                 }
+                                break;
                             case MUSIC:
-                                if (event.getChannel().getIdLong() != (MUSIC)) {
+                                if (event.getChannel().getIdLong() != (MUSICC)) {
+                                    System.out.println("2");
+
                                     embedBuilder.setDescription(Emoji.ERROR + " Incorrect text channel!\n" +
-                                            "Go to " + event.getGuild().getGuildChannelById(MUSIC).getAsMention() + " and send \n" +
+                                            "Go to " + event.getGuild().getGuildChannelById(MUSICC).getAsMention() + " and send \n" +
                                             "```java\n" +
                                             prefix + " " + invoke + "\n" +
                                             "```");
                                     event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
                                     return;
                                 }
-                            case OTHERS:
-                                if (event.getChannel().getIdLong() != (OTHERS)) {
-                                    embedBuilder.setDescription(Emoji.ERROR + " Incorrect text channel!\n" +
-                                            "Go to " + event.getGuild().getGuildChannelById(OTHERS).getAsMention() + " and send \n" +
-                                            "```java\n" +
-                                            prefix + " " + invoke + "\n" +
-                                            "```");
-                                    event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
-                                    return;
-                                }
+                                break;
                             case WALLET:
-                                if (event.getChannel().getIdLong() != (WALLET)) {
+                                if (event.getChannel().getIdLong() != (WALLETC)) {
+                                    System.out.println("4");
+
                                     embedBuilder.setDescription(Emoji.ERROR + " Incorrect text channel!\n" +
-                                            "Go to " + event.getGuild().getGuildChannelById(WALLET).getAsMention() + " and send \n" +
+                                            "Go to " + event.getGuild().getGuildChannelById(WALLETC).getAsMention() + " and send \n" +
                                             "```java\n" +
                                             prefix + " " + invoke + "\n" +
                                             "```");
                                     event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
                                     return;
                                 }
+                                break;
+                            case OTHERS:
+                                if (event.getChannel().getIdLong() != (OTHERSC)) {
+                                    System.out.println("5");
+
+                                    embedBuilder.setDescription(Emoji.ERROR + " Incorrect text channel!\n" +
+                                            "Go to " + event.getGuild().getGuildChannelById(OTHERSC).getAsMention() + " and send \n" +
+                                            "```java\n" +
+                                            prefix + " " + invoke + "\n" +
+                                            "```");
+                                    event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+                                    return;
+                                }
+                                break;
                         }
                     }
                 }
