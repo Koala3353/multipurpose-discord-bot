@@ -15,7 +15,6 @@ import com.general_hello.commands.commands.Info.AboutCommand;
 import com.general_hello.commands.commands.Info.InfoServerCommand;
 import com.general_hello.commands.commands.Info.InfoUserCommand;
 import com.general_hello.commands.commands.Math.MathCommand;
-import com.general_hello.commands.commands.MusicPlainCommand.*;
 import com.general_hello.commands.commands.Others.*;
 import com.general_hello.commands.commands.RankingSystem.ViewRank;
 import com.general_hello.commands.commands.Register.RegisterCommand;
@@ -77,7 +76,6 @@ public class CommandManager {
         addCommand(new GuessNumberCommand());
 
         //blackjack
-        //TODO: MAKE BLACK JACK TO BUTTONS INSTEAD OF COMMANDS
         addCommand(new BlackjackCommand(gameHandler));
         addCommand(new DoubleDownCommand());
         addCommand(new HitCommand());
@@ -88,7 +86,7 @@ public class CommandManager {
         addCommand(new ViewRank());
 
         //music
-        addCommand(new PauseCommand());
+        /*addCommand(new PauseCommand());
         addCommand(new PlayCommand());
         addCommand(new QueueCommand());
         addCommand(new RepeatCommand());
@@ -96,7 +94,7 @@ public class CommandManager {
         addCommand(new SkipCommand());
         addCommand(new VolumeCommand());
         addCommand(new StopCommand());
-        addCommand(new LeaveCommand());
+        addCommand(new LeaveCommand());*/
 
         //others
         addCommand(new JokeCommand());
