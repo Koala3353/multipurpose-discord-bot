@@ -1,16 +1,17 @@
 package com.general_hello.commands;
 
 import com.general_hello.commands.Database.DatabaseManager;
-import com.general_hello.commands.Database.SQLiteDataSource;
+import com.general_hello.commands.OtherEvents.OtherEvents;
+import com.general_hello.commands.commands.Emoji.Emoji;
 import com.general_hello.commands.commands.GroupOfGames.Games.TriviaCommand;
-import com.general_hello.commands.commands.GetData;
 import com.general_hello.commands.commands.PrefixStoring;
-import com.general_hello.commands.commands.Settings.SettingsData;
+import com.general_hello.commands.commands.RankingSystem.LevelPointManager;
 import com.general_hello.commands.commands.Utils.MoneyData;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -22,6 +23,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,8 @@ public class Listener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
     public static HashMap<String, Integer> count = new HashMap<>();
     public static JDA jda;
+    public static ArrayList<Long> blackListDbCheck = new ArrayList<>();
+    private static boolean oof = true;
 
     public Listener(EventWaiter waiter) {
         manager = new CommandManager(waiter);
@@ -38,20 +42,32 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        GetData getData = new GetData();
-        getData.checkIfContainsData(event.getAuthor(), event);
-
         EmbedBuilder em;
 
         if (event.getAuthor().isBot() || event.isWebhookMessage()) {
             return;
         }
 
+        Message m = (event).getMessage();
+
+        if(!m.getAuthor().isBot()) // ignore bot messages
+        {
+            // Store the message
+            OtherEvents.messageCache.putMessage(m);
+
+            // Run automod on the message
+            OtherEvents.autoMod.performAutomod(m);
+        }
+        //add xp :D
+        LevelPointManager.feed(event.getAuthor());
+
         final long guildID = event.getGuild().getIdLong();
         String prefix = PrefixStoring.PREFIXES.computeIfAbsent(guildID, DatabaseManager.INSTANCE::getPrefix);
         String raw = event.getMessage().getContentRaw();
 
-        if (event.getMessage().getContentRaw().equals(prefix + "commands")) {
+        trivia(event);
+
+        if (event.getMessage().getContentRaw().equals(prefix + " commands")) {
             if (event.getAuthor().getId().equals(Config.get("owner_id"))) {
                 em = new EmbedBuilder().setTitle("Command Count details!!!!").setColor(Color.red).setFooter("Commands used until now ").setTimestamp(LocalDateTime.now());
                 em.addField("Command made by ", event.getAuthor().getName(), false);
@@ -62,29 +78,24 @@ public class Listener extends ListenerAdapter {
             }
         }
 
-        try {
-            if (SettingsData.pingForPrefix.get(event.getAuthor())) {
-                if (event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
-                    event.getChannel().sendMessage("Psst. Check your **DMS** for the prefix of this bot").queue();
-                    event.getMessage().getAuthor().openPrivateChannel().complete().sendMessage("The prefix for this bot is `" + prefix + "`").queue();
-                }
+            if (event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
+                event.getChannel().sendMessage("Psst. Check your **DMS** for the prefix of this bot").queue();
+                event.getMessage().getAuthor().openPrivateChannel().complete().sendMessage("The prefix for this bot is `" + prefix + "`").queue();
             }
-        } catch (Exception e) {
-            SettingsData.pingForPrefix.put(event.getAuthor(), true);
-        }
+
 
         jda = event.getJDA();
 
         System.out.println(prefix);
-        if (raw.equalsIgnoreCase(prefix + "shutdown") && event.getAuthor().getId().equals(Config.get("owner_id"))) {
+        if (raw.equalsIgnoreCase(prefix + " shutdown") && event.getAuthor().getId().equals(Config.get("owner_id"))) {
             shutdown(event, true);
             return;
-        } else if (raw.equalsIgnoreCase(prefix + "shutdown") && event.getAuthor().getId().equals(Config.get("owner_id_partner"))) {
+        } else if (raw.equalsIgnoreCase(prefix + " shutdown") && event.getAuthor().getId().equals(Config.get("owner_id_partner"))) {
             shutdown(event, false);
             return;
         }
 
-        if (raw.startsWith(prefix)) {
+        if (raw.toLowerCase().startsWith(prefix)) {
             try {
                 manager.handle(event, prefix);
             } catch (InterruptedException | IOException | SQLException e) {
@@ -111,8 +122,8 @@ public class Listener extends ListenerAdapter {
         LOGGER.info("The bot " + event.getAuthor().getAsMention() + " is shutting down.\n" +
                 "Thank you for using General_Hello's Code!!!");
 
-        event.getChannel().sendMessage("Shutting down...").queue();
-        event.getChannel().sendMessage("Bot successfully shutdown!").queue();
+        event.getChannel().sendMessage("Shutting down... " + Emoji.LOADING).queue();
+        event.getChannel().sendMessage("Bot successfully shutdown! " + Emoji.USER).queue();
         EmbedBuilder em = new EmbedBuilder().setTitle("Shutdown details!").setColor(Color.red).setFooter("Shutdown on ").setTimestamp(LocalDateTime.now());
         em.addField("Shutdown made by ", event.getAuthor().getName(), false);
         em.addField("Date", LocalDateTime.now().getMonthValue() + "/" + LocalDateTime.now().getDayOfMonth() + "/" + LocalDateTime.now().getYear(), false);
@@ -127,7 +138,6 @@ public class Listener extends ListenerAdapter {
 
 
         event.getJDA().shutdown();
-        SQLiteDataSource.ds.close();
         BotCommons.shutdown(event.getJDA());
     }
 

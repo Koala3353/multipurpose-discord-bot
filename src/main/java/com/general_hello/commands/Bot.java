@@ -1,12 +1,11 @@
 package com.general_hello.commands;
 
 import com.general_hello.commands.Database.DatabaseManager;
-import com.general_hello.commands.Database.SQLiteDataSource;
 import com.general_hello.commands.OtherEvents.*;
 import com.general_hello.commands.SlashCommands.OnSlashCommand;
-import com.general_hello.commands.commands.Entertainments.EntertainmentListener;
-import com.general_hello.commands.commands.RankingSystem.OnGainXP;
-import com.general_hello.commands.commands.VoiceCall.AudioStorage;
+import com.general_hello.commands.SlashCommands.SlashCommandHandler;
+import com.general_hello.commands.commands.GroupOfGames.Entertainments.EntertainmentListener;
+import com.general_hello.commands.commands.Utils.MCColor;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import me.duncte123.botcommons.web.WebUtils;
@@ -24,24 +23,21 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Bot {
     public static JDA jda;
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_RED = "\u001B[31m";
-    public static HashMap<Long, String> longToCommandName = new HashMap<>();
 
     private Bot() throws LoginException {
         DatabaseManager.INSTANCE.getPrefix(-1);
-        WebUtils.setUserAgent("Userphone");
+        WebUtils.setUserAgent("IgnBot");
         EmbedUtils.setEmbedBuilder(
                 () -> new EmbedBuilder()
                         .setColor(Color.cyan)
-                        .setFooter("u?help")
+                        .setFooter("ign help")
         );
 
         EventWaiter waiter = new EventWaiter();
@@ -61,21 +57,19 @@ public class Bot {
                 .addEventListeners(new Listener(waiter), waiter)
                 .addEventListeners(new EntertainmentListener())
                 .addEventListeners(new OnSlashCommand())
-                .addEventListeners(new OnGainXP())
                 .addEventListeners(new OnButtonClick())
                 .addEventListeners(new OnPrivateMessage())
                 .addEventListeners(new OtherEvents())
                 .addEventListeners(new OnSelectionMenu())
-                .addEventListeners(new onCallMessageReceived())
-                .setActivity(Activity.watching("u?help"))
+                .addEventListeners(new OnButtonChessClick())
+                .addEventListeners(new OnReadyEvent())
+                .setActivity(Activity.watching("ign help"))
                 .setStatus(OnlineStatus.ONLINE)
                 .setChunkingFilter(ChunkingFilter.ALL) // enable member chunking for all guilds
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .enableCache(CacheFlag.ACTIVITY)
+                .enableCache(CacheFlag.ONLINE_STATUS)
                 .build();
-
-        for(int i = 0; i < AudioStorage.audio.size(); i++) {
-            AudioStorage.audio.set(i, new AudioStorage.Audio(new ConcurrentLinkedQueue<>(), "empty", "", new ConcurrentLinkedQueue<>(), "", "", false));
-        }
     }
 
     public static void main(String[] args) throws LoginException {
@@ -85,11 +79,12 @@ public class Bot {
     public static void commandPrompt() throws LoginException {
         boolean question = false;
         boolean question1 = false;
+        boolean channel = false;
         TextChannel textChannel = null;
 
         Scanner scanner = new Scanner(System.in);
         System.out.println(ANSI_RED + "Program Loaded!\n" +
-                "Welcome to Userphone Bot Command Line (UBCL) ! Have a great day!" + ANSI_RESET);
+                "Welcome to Ignite Bot Command Line (UBCL) ! Have a great day!" + ANSI_RESET);
         while (true) {
             String s = scanner.nextLine();
             JDA jda = Listener.jda;
@@ -113,7 +108,8 @@ public class Bot {
                         "Option 4: disconnect channel = To disconnect the channel of the server!\n" +
                         "Option 5: msgshutdown = To send the shutdown reason in #shutdown!\n" +
                         "Option 6: msgstart = To send the start up message in #startups!\n" +
-                        "Option 7: stop = To stop running the program!" + ANSI_RESET);
+                        "Option 7: startactivity = To start the activity changing crap!\n" +
+                        "Option 8: stop = To stop running the program!" + ANSI_RESET);
             }
 
             if (s.equalsIgnoreCase("disconnect channel")) {
@@ -133,6 +129,57 @@ public class Bot {
                 }
             }
 
+            if (s.equalsIgnoreCase("jda")) {
+                System.out.println(jda);
+            }
+
+            if (s.equalsIgnoreCase("startactivity")) {
+                while (true) {
+                    System.out.println("Yeet");
+                    jda.getPresence().setActivity(Activity.watching("Made by General Hello#0101"));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+
+                    jda.getPresence().setActivity(Activity.watching("Happy Moon festival!"));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+
+                    jda.getPresence().setActivity(Activity.watching("ign help"));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+
+                    jda.getPresence().setActivity(Activity.watching("Made by HELLO66#0066"));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+
+                    jda.getPresence().setActivity(Activity.watching("Made by unjown#4644"));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+
+                    jda.getPresence().setActivity(Activity.watching("Design made by SkyacinthClues#0822"));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+
+                    jda.getPresence().setActivity(Activity.watching("Deuteronomy 23 1. No one who has been emasculated by crushing or cutting may enter the assembly of the LORD."));
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (Exception ignored) {}
+                }
+            }
+
             if (question) {
                 try {
                     System.out.println(jda.getTextChannelById(s).getName() + " is the channel that the message will be sent in!");
@@ -148,6 +195,7 @@ public class Bot {
                 System.out.println("Starting the bot up!");
                 new Bot();
             }
+        
 
             if (s.equalsIgnoreCase("botinfo")) {
                 String asTag = jda.getSelfUser().getAsTag();
@@ -169,8 +217,11 @@ public class Bot {
             if (s.equalsIgnoreCase("stop")) {
                 System.out.println("Thank you for using UBCL have a great day!");
                 jda.shutdown();
-                SQLiteDataSource.ds.close();
                 break;
+            }
+
+            if (s.equalsIgnoreCase("updateslashcommand")) {
+                SlashCommandHandler.updateCommands((x) -> System.out.println(MCColor.translate("&aQueued "+x.size()+" commands!")), Throwable::printStackTrace);
             }
         }
     }
