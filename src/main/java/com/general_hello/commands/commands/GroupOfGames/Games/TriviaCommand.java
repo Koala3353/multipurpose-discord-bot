@@ -16,6 +16,8 @@ import java.util.HashMap;
 
 public class TriviaCommand implements ICommand {
     public static HashMap<User, String> storeAnswer = new HashMap<>();
+    public static HashMap<User, String> storeQuestion = new HashMap<>();
+    public static HashMap<User, String> storeDifficulty = new HashMap<>();
 
     @Override
     public void handle(CommandContext ctx) {
@@ -50,7 +52,7 @@ public class TriviaCommand implements ICommand {
         int size = arrayList.size();
         while (x < size) {
             int random = UtilNum.randomNum(0, size-1 - (x));
-            String choice = arrayList.get(random).replace("&quot;", "'").replace("&#039;", "'");
+            String choice = arrayList.get(random).replace("&quot;", "'").replace("&#039;", "'").replace("&Uuml;", "ü").replace("&amp;", "&");
             System.out.println(choice);
 
             menu.addOption(choice, choice);
@@ -59,16 +61,18 @@ public class TriviaCommand implements ICommand {
             x++;
         }
 
-        String msg = ctx.getAuthor().getAsMention() + " " + obj.getQuestion().replace("&quot;", "'").replace("&#039;", "'");
+        String msg = obj.getQuestion().replace("&quot;", "'").replace("&#039;", "'").replace("&Uuml;", "ü").replace("&amp;", "&");
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Trivia!!!");
         embedBuilder.addField("Category: ", obj.getCategory(), true);
         embedBuilder.addField("Difficulty: ", obj.getDifficulty(), true);
-        embedBuilder.addField("Question: ", msg, false);
+        embedBuilder.addField("Question: ", ctx.getAuthor().getAsMention() + " " + msg, false);
         embedBuilder.setColor(Color.cyan);
         embedBuilder.setFooter("A correct answer will give you \uD83E\uDE99 1000");
         ctx.getChannel().sendMessageEmbeds(embedBuilder.build()).setActionRow(menu.build()).queue();
-        storeAnswer.put(ctx.getAuthor(), obj.getCorrectAnswer().replace("&quot;", "'").replace("&#039;", "'"));
+        storeQuestion.put(ctx.getAuthor(), msg);
+        storeDifficulty.put(ctx.getAuthor(), obj.getDifficulty());
+        storeAnswer.put(ctx.getAuthor(), obj.getCorrectAnswer().replace("&quot;", "'").replace("&#039;", "'").replace("&Uuml;", "ü").replace("&amp;", "&"));
     }
 
 

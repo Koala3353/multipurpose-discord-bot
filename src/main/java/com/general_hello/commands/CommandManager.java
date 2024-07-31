@@ -23,6 +23,7 @@ import com.general_hello.commands.commands.Uno.ChallengeCommand;
 import com.general_hello.commands.commands.Uno.DrawCommand;
 import com.general_hello.commands.commands.Uno.PlayCardCommand;
 import com.general_hello.commands.commands.Uno.UnoCommand;
+import com.general_hello.commands.commands.Utils.ErrorUtils;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -106,6 +107,8 @@ public class CommandManager {
         addCommand(new UpdateIgniteCoinsCommand());
         addCommand(new SetNameCommand());
         addCommand(new AddCreditsCommand());
+        addCommand(new PreviewCommand());
+        addCommand(new EvalCommand());
     }
 
     private void addCommand(ICommand cmd) {
@@ -161,10 +164,6 @@ public class CommandManager {
             EmbedBuilder embedBuilder = new EmbedBuilder().setColor(Color.RED);
 
             if (event.getGuild().getIdLong() == 843769353040298011L) {
-                if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(894793721558761483L))) {
-                    event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(894793721558761483L)).queue();
-                }
-
                     if (!testing) {
                     if (!cmd.getCategory().equals(CommandType.SPECIAL)) {
                         System.out.println(cmd.getCategory());
@@ -227,10 +226,13 @@ public class CommandManager {
             event.getChannel().sendTyping().queue();
             List<String> args = Arrays.asList(split).subList(1, split.length);
 
-            CommandContext ctx = new CommandContext(event, args);
+            try {
+                CommandContext ctx = new CommandContext(event, args);
 
-            cmd.handle(ctx);
-
+                cmd.handle(ctx);
+            } catch (Exception e) {
+                ErrorUtils.error(event, e);
+            }
         }
     }
 }

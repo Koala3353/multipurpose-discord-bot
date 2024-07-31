@@ -55,7 +55,7 @@ public class UpdateIgniteCoinsCommand implements ICommand {
             return null;
         }
         final String spreadsheetId = "1tpgu2NVn7maZt81qhBI-sJqiDV7gwOXU5O6WIghwZhM";
-        final String range = "ALL Igniters!B3:I131";
+        final String range = "Ref Sheet TRIAL!B3:F156";
         Sheets service = new Sheets.Builder(HTTP_TRANSPORT, SheetsQuickstart.JSON_FACTORY, SheetsQuickstart.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
@@ -69,9 +69,11 @@ public class UpdateIgniteCoinsCommand implements ICommand {
             System.out.println("Name, Major");
             for (List row : values) {
                 // Print columns A and E, which correspond to indices 0 and 4.
-                if (!row.get(0).toString().equals("Maxine")) {
-                    String name = row.get(0).toString();
-                    String[] split = name.split("\\s+");
+                String name = row.get(0).toString();
+                System.out.println(name);
+                String[] split = name.split("\\s+");
+                if (split.length > 1) {
+
                     int length = split.length;
 
                     if (length == 3) {
@@ -81,9 +83,8 @@ public class UpdateIgniteCoinsCommand implements ICommand {
                     }
 
                     if (Data.realNameUserPhoneUserHashMap.containsKey(name)) {
-                        System.out.println(name);
                         UserPhoneUser userPhoneUser = Data.realNameUserPhoneUserHashMap.get(name);
-                        userPhoneUser.setBalance(Integer.parseInt(row.get(7).toString()));
+                        userPhoneUser.setBalance(Integer.parseInt(row.get(4).toString()));
                         Data.realNameUserPhoneUserHashMap.put(name, userPhoneUser);
                     }
                 }

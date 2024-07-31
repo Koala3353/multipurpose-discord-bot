@@ -29,31 +29,44 @@ public class OnSelectionMenu extends ListenerAdapter {
                 .addOption("Uno", "uno")
                 .addOption("Blackjack", "bj")
                 .addOption("Guess the number", "gn")
-                .addOption("Hangman", "hangman")
                 .addOption("Trivia", "trivia")
                 .addOption("Chess", "chess")
                 .build();
         int x = 0;
-        String answer = TriviaCommand.storeAnswer.get(event.getUser());
 
         System.out.println(event.getSelectedOptions().get(0).getValue());
         if (TriviaCommand.storeAnswer.containsKey(event.getUser())) {
+            String answer = TriviaCommand.storeAnswer.get(event.getUser());
+            String question = TriviaCommand.storeQuestion.get(event.getUser());
+            String difficulty = TriviaCommand.storeDifficulty.get(event.getUser());
+            int reward = 1000;
+
+            int multiplier = difficulty.equals("medium") ? 3 : 1;
+            multiplier = difficulty.equals("hard") ? 5 : multiplier;
+
+            reward = reward * multiplier;
+
             if (event.getSelectedOptions().get(0).getValue().equals(answer)) {
                 event.getChannel().sendMessage("Correct answer!!!!\n" +
-                        "You got \uD83E\uDE99 1,000 for getting the correct answer").queue();
-                LevelPointManager.feed(event.getUser(), 40);
-                DatabaseManager.INSTANCE.setCredits(event.getUser().getIdLong(), 1000);
+                        "You got \uD83E\uDE99 " + reward + " for getting the correct answer!\n" +
+                        "Question: `" + question + "`").queue();
+                LevelPointManager.feed(event.getUser(), 25);
+                DatabaseManager.INSTANCE.setCredits(event.getUser().getIdLong(), reward);
                 event.deferEdit().queue();
                 event.getMessage().delete().queue();
                 TriviaCommand.storeAnswer.remove(event.getUser());
             } else {
                 EmbedBuilder e = new EmbedBuilder();
                 e.setTitle("Incorrect answer");
-                e.setFooter("A correct answer gives you \uD83E\uDE99 1,000");
-                e.addField("The correct answer is " + TriviaCommand.storeAnswer.get(event.getUser()), "Better luck next time", false).setColor(Color.RED);
+                e.setFooter("A correct answer gives you \uD83E\uDE99 " + reward);
+                e.addField("Question: `" + question + "`\n" + "Difficulty: **" + difficulty +
+                        "**\nThe correct answer is " + TriviaCommand.storeAnswer.get(event.getUser()), "Better luck next time", false).setColor(Color.RED);
                 event.getChannel().sendMessageEmbeds(e.build()).queue();
                 event.getMessage().delete().queue();
                 TriviaCommand.storeAnswer.remove(event.getUser());
+                TriviaCommand.storeQuestion.remove(event.getUser());
+                TriviaCommand.storeDifficulty.remove(event.getUser());
+
                 event.deferEdit().queue();
             }
         }
@@ -94,7 +107,8 @@ public class OnSelectionMenu extends ListenerAdapter {
                 case "gn":
                     event.getMessage().delete().queue();
                     event.getChannel().sendMessageEmbeds(helpCrap(2, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
-                    event.deferReply().queue();
+                    event.deferEdit().queue();
+                    break;
                 case "trivia":
                     event.getMessage().delete().queue();
                     event.getChannel().sendMessageEmbeds(helpCrap(4, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();

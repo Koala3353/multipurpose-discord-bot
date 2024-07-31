@@ -86,7 +86,7 @@ public class PlayCardCommand implements ICommand {
                                     eb2.setColor(color);
                                     eb2.setTitle(String.format("You had to draw %d cards because %s played a %s", card.getValue() == UnoCard.Value.PLUSTWO ? 2 : 4, hands.get(turn).getPlayerName(), card.toString()));
                                     channel.sendMessageEmbeds(eb2.build()).queue();
-                                    channel.sendFile(ImageHandler.getCardsImage(hand.getCards()), "hand.png").embed(eb.build()).queueAfter(1, TimeUnit.SECONDS, newmessage -> hand.setMessageId(newmessage.getIdLong()));
+                                    channel.sendFile(ImageHandler.getCardsImage(hand.getCards()), "hand.png").setEmbeds(eb.build()).queueAfter(1, TimeUnit.SECONDS, newmessage -> hand.setMessageId(newmessage.getIdLong()));
                                 } else {
                                     message.editMessage(eb.build()).queue();
                                 }
@@ -99,7 +99,7 @@ public class PlayCardCommand implements ICommand {
                             } else {
                                 EmbedBuilder eb2 = new EmbedBuilder();
                                 int size = hands.size() - 1;
-                                int credits = unoGame.getBet() == 0 ? 500 * size : unoGame.getBet() * size;
+                                int credits = unoGame.getBet() == 0 ? 5000 * size : unoGame.getBet() * size;
                                 eb2.setTitle(String.format("You played a **%s** and won, you won **%d** credits", card.toString(), credits));
                                 LevelPointManager.feed(e.getAuthor(), 20);
                                 DatabaseManager.INSTANCE.setCredits(e.getAuthor().getIdLong(), credits);
@@ -117,7 +117,7 @@ public class PlayCardCommand implements ICommand {
                         }
                     }
                     if (unoGame.isFinished()) {
-                        guild.getCategoryById(unoGame.getCategory()).delete().queueAfter(65, TimeUnit.SECONDS);
+                        guild.getCategoryById(unoGame.getCategory()).delete().queueAfter(45, TimeUnit.SECONDS);
                         gameHandler.removeUnoGame(guild.getIdLong());
                     }
                 } else {

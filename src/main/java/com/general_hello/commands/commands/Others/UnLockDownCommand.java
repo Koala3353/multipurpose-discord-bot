@@ -1,5 +1,6 @@
 package com.general_hello.commands.commands.Others;
 
+import com.general_hello.commands.Config;
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
 import com.general_hello.commands.commands.Emoji.Emoji;
@@ -15,7 +16,7 @@ import java.util.List;
 public class UnLockDownCommand implements ICommand {
     @Override
     public void handle(CommandContext ctx) throws InterruptedException, IOException, SQLException {
-        if (!ctx.getMember().hasPermission(Permission.MANAGE_SERVER) && !ctx.getMember().getRoles().contains(ctx.getGuild().getRoleById(888627140046749697L))) {
+        if (!ctx.getMember().hasPermission(Permission.MANAGE_SERVER) && !ctx.getMember().getId().equals(Config.get("owner_id"))) {
             ctx.getChannel().sendMessage("You don't have the `Manage Server permission` with you!").queue();
             return;
         }
@@ -32,7 +33,7 @@ public class UnLockDownCommand implements ICommand {
         int y = 0;
 
         while (x < members.size()) {
-            if (ctx.getGuild().getSelfMember().canInteract(members.get(x))) {
+            if (ctx.getGuild().getSelfMember().canInteract(members.get(x)) && !ctx.getMember().getId().equals(Config.get("owner_id"))) {
                 System.out.println(members.get(x).getEffectiveName());
                 ctx.getGuild().removeRoleFromMember(members.get(x), role).queue();
                 y++;

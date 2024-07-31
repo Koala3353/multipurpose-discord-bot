@@ -18,25 +18,25 @@ public class SayCommand implements ICommand {
         String prefix = PrefixStoring.PREFIXES.computeIfAbsent(guildID, (id) -> Config.get("prefix"));
 
         if(e.getArgs().isEmpty()) {
-            e.getChannel().sendMessage(getHelp(prefix)).queue();
             return;
         }
 
         if("embed".equals(e.getArgs().get(0))) {
                 String[] tokens = e.getMessage().getContentRaw().split(" ");
-                String content = "";
+                StringBuilder content = new StringBuilder();
 
                 for (int i = 0; i < tokens.length; i++) {
-                    content += i == 0 || i == 1 || i == 2 || i == 3 ? "" : tokens[i] + " "; //Ignore first two tokens: =say and embed
+                    content.append(i == 0 || i == 1 || i == 2 || i == 3 ? "" : tokens[i] + " "); //Ignore first two tokens: ignt say and embed
                 }
 
                 e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE);
 
                 EmbedBuilder embedmsg = new EmbedBuilder();
-                embedmsg.setColor(Color.red);
+            float[] floats = Color.RGBtoHSB(225, 215, 0, null);
+            embedmsg.setColor(Color.getHSBColor(floats[0], floats[1], floats[2]));
 
                 embedmsg.setAuthor(e.getArgs().get(1), null, e.getAuthor().getAvatarUrl());
-                embedmsg.setDescription(content);
+                embedmsg.setDescription(content.toString());
                 embedmsg.setFooter("Announced by " + e.getAuthor().getName(), null);
                 e.getChannel().sendMessageEmbeds(embedmsg.build()).queue(
                         (message) -> {

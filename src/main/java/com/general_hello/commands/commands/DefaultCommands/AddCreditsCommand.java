@@ -5,7 +5,6 @@ import com.general_hello.commands.Database.DatabaseManager;
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
 import com.general_hello.commands.commands.ICommand;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.io.IOException;
@@ -16,8 +15,8 @@ public class AddCreditsCommand implements ICommand {
     public void handle(CommandContext ctx) throws InterruptedException, IOException, SQLException {
         Member member = ctx.getMember();
 
-        if (!member.hasPermission(Permission.MANAGE_SERVER) && !member.getId().equals(Config.get("owner_id"))) {
-            ctx.getChannel().sendMessage("You must have the Manage Server permission to use his command").queue();
+        if (!member.getId().equals(Config.get("owner_id"))) {
+            ctx.getChannel().sendMessage("Only the owner can do this!").queue();
             return;
         }
 

@@ -1,5 +1,6 @@
 package com.general_hello.commands.OtherEvents;
 
+import com.general_hello.commands.Config;
 import com.general_hello.commands.Database.DatabaseManager;
 import com.general_hello.commands.commands.Info.InfoUserCommand;
 import com.general_hello.commands.commands.Others.UpdateIgniteCoinsCommand;
@@ -51,6 +52,22 @@ public class OnPrivateMessage extends ListenerAdapter {
 
                 Data.realNameUserPhoneUserHashMap.put(oldAnswers.get(0), user);
             }
+            return;
+        }
+
+        if (event.getMessage().getContentRaw().startsWith("delete") && event.getAuthor().getId().equals(Config.get("owner_id"))) {
+            String[] split = event.getMessage().getContentRaw().split("\\s++");
+            String messageId = split[2];
+            String channelId = split[1];
+            event.getJDA().getTextChannelById(channelId).retrieveMessageById(messageId).queue((message -> {
+                if (message != null) {
+                    event.getChannel().sendMessage("Deleting this message now.....\n" + message.getContentDisplay()).queue();
+                    message.delete().queue();
+                    event.getChannel().sendMessage("Successfully deleted it!").queue();
+                    return;
+                }
+                event.getChannel().sendMessage("The message was not found!").queue();
+            }));
         }
     }
 }

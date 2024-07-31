@@ -10,9 +10,9 @@ import java.util.function.Function;
 
 public class LevelPointManager{
 
-    private static final int POINTS_PER_MESSAGE = 5;
+    private static final int POINTS_PER_MESSAGE = 15;
     //in seconds
-    private static final int DELAY = 1;
+    private static final int DELAY = 20;
     private static final Function<Long, Long> CALCULATE_LEVEL = ep -> (long) (1 / (float) (8) * Math.sqrt(ep));
     private static final Function<Long, Long> CALCULATE_EP = level -> (long) 64 * (long) Math.pow(level, 2);
 
@@ -56,7 +56,7 @@ public class LevelPointManager{
             }
 
             OffsetDateTime last = accessMap.get(member);
-            if(OffsetDateTime.now().isBefore(last.plusMinutes(DELAY))){
+            if(OffsetDateTime.now().isBefore(last.plusSeconds(DELAY))){
                 System.out.println("Did not add xp to " + member.getName() + " due to delay!");
                 return;
             }
