@@ -1,6 +1,7 @@
 package com.general_hello.commands.commands.GroupOfGames.MiniGames;
 
 import com.general_hello.commands.commands.Emoji.EmojiObject;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
@@ -9,20 +10,20 @@ import net.dv8tion.jda.api.interactions.components.Button;
 
 public class MainChessCode {
     //black
-    public static EmojiObject emojiObjectPawn = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.BPAWN);
-    public static EmojiObject emojiObjectKing = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.BKING);
-    public static EmojiObject emojiObjectQueen = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.BQUEEN);
-    public static EmojiObject emojiObjectRook = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.BROOK);
-    public static EmojiObject emojiObjectKnight = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.BKNIGHT);
-    public static EmojiObject emojiObjectBishop = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.BBISHOP);
+    public static EmojiObject emojiObjectPawn = Emojis.customEmojiToEmote(Emojis.BPAWN);
+    public static EmojiObject emojiObjectKing = Emojis.customEmojiToEmote(Emojis.BKING);
+    public static EmojiObject emojiObjectQueen = Emojis.customEmojiToEmote(Emojis.BQUEEN);
+    public static EmojiObject emojiObjectRook = Emojis.customEmojiToEmote(Emojis.BROOK);
+    public static EmojiObject emojiObjectKnight = Emojis.customEmojiToEmote(Emojis.BKNIGHT);
+    public static EmojiObject emojiObjectBishop = Emojis.customEmojiToEmote(Emojis.BBISHOP);
 
     //white
-    public static EmojiObject wemojiObjectPawn = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.WPAWN);
-    public static EmojiObject wemojiObjectKing = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.WKING);
-    public static EmojiObject wemojiObjectQueen = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.WQUEEN);
-    public static EmojiObject wemojiObjectRook = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.WROOK);
-    public static EmojiObject wemojiObjectKnight = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.WKNIGHT);
-    public static EmojiObject wemojiObjectBishop = com.general_hello.commands.commands.Emoji.Emoji.customEmojiToEmote(com.general_hello.commands.commands.Emoji.Emoji.WBISHOP);
+    public static EmojiObject wemojiObjectPawn = Emojis.customEmojiToEmote(Emojis.WPAWN);
+    public static EmojiObject wemojiObjectKing = Emojis.customEmojiToEmote(Emojis.WKING);
+    public static EmojiObject wemojiObjectQueen = Emojis.customEmojiToEmote(Emojis.WQUEEN);
+    public static EmojiObject wemojiObjectRook = Emojis.customEmojiToEmote(Emojis.WROOK);
+    public static EmojiObject wemojiObjectKnight = Emojis.customEmojiToEmote(Emojis.WKNIGHT);
+    public static EmojiObject wemojiObjectBishop = Emojis.customEmojiToEmote(Emojis.WBISHOP);
 
     public static void loadBoard(ButtonClickEvent event) {
         EmbedBuilder embedBuilder = new EmbedBuilder().setDescription("----------------------------------");

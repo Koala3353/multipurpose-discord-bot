@@ -47,8 +47,8 @@ public class AboutCommand implements ICommand {
                 : event.getJDA().getUserById(Config.get("owner_id")).getName();
         StringBuilder descr = new StringBuilder().append("Hello! I am **").append(event.getSelfUser().getName()).append("**, ")
                 .append(description).append("\nI ").append(IS_AUTHOR ? "was written in Java" : "am owned").append(" by **")
-                .append(author).append("** using " + "JDA Utils [Commands Extension](" + JDAUtilitiesInfo.GITHUB + ") (")
-                .append(") and the [JDA library](" + JDAInfo.GITHUB + ")")
+                .append(author).append("** using " + "JDA Utils [Commands Extension](" + JDAUtilitiesInfo.GITHUB + ") ")
+                .append("and the [JDA library](" + JDAInfo.GITHUB + ")")
                 .append("\nType `").append(prefix).append("help")
                 .append("` to see my commands!").append(join || inv ? invline : "").append("\n");
 
@@ -58,8 +58,8 @@ public class AboutCommand implements ICommand {
         descr.append("Memory Usage: ").append((int) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 0.00000001)).append(" mb");
         descr.append("\n");
         String messageCPU = String.valueOf(ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage()).startsWith("-") ? ("Unavailable") : (ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage() + "%");
-        descr.append("CPU Usage: ");
-        descr.append("\n").append(messageCPU).append("\n\nProcessors: ").append(ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors()).append(" processors");
+        descr.append("\nCPU Usage: ");
+        descr.append("\n").append(messageCPU).append("\nProcessors: ").append(ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors()).append(" processors");
         //Here
         System.out.println("Total Memory: " + Runtime.getRuntime().totalMemory());
         System.out.println("Free Memory: " + Runtime.getRuntime().freeMemory());

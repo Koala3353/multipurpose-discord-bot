@@ -2,7 +2,7 @@ package com.general_hello.commands.commands.MusicPlainCommand;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.Music.AudioManager;
 import com.general_hello.commands.commands.Music.GuildAudioPlayer;
@@ -23,7 +23,7 @@ public class SkipCommand implements ICommand
         }
         if (guildAudioPlayer.getPlayer().getPlayingTrack() == null)
         {
-            ctx.getMessage().reply(Emoji.ERROR + " There is no music to skip!").queue();
+            ctx.getMessage().reply(Emojis.ERROR + " There is no music to skip!").queue();
             return;
         }
         guildAudioPlayer.getScheduler().nextTrack();

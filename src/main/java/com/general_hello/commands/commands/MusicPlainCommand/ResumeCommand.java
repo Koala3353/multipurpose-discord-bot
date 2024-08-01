@@ -2,7 +2,7 @@ package com.general_hello.commands.commands.MusicPlainCommand;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.Music.AudioManager;
 import com.general_hello.commands.commands.Music.GuildAudioPlayer;
@@ -23,7 +23,7 @@ public class ResumeCommand implements ICommand
         AudioPlayer player = guildAudioPlayer.getPlayer();
         if (player.getPlayingTrack() == null)
         {
-            ctx.getMessage().reply(Emoji.ERROR + " I'm currently not playing any music!").queue();
+            ctx.getMessage().reply(Emojis.ERROR + " I'm currently not playing any music!").queue();
         }
         if (!player.isPaused())
         {
@@ -31,7 +31,7 @@ public class ResumeCommand implements ICommand
             return;
         }
         player.setPaused(false);
-        ctx.getChannel().sendMessageEmbeds(EmbedUtil.successEmbed("Resumed! " + Emoji.USER)).queue();
+        ctx.getChannel().sendMessageEmbeds(EmbedUtil.successEmbed("Resumed! " + Emojis.USER)).queue();
     }
 
     @Override

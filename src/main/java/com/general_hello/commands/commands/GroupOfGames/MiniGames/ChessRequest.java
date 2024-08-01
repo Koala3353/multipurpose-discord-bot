@@ -2,7 +2,7 @@ package com.general_hello.commands.commands.GroupOfGames.MiniGames;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.Emoji.EmojiObject;
 import com.general_hello.commands.commands.GetData;
 import com.general_hello.commands.commands.ICommand;
@@ -20,12 +20,12 @@ public class ChessRequest implements ICommand {
     @Override
     public void handle(CommandContext ctx) throws InterruptedException, IOException {
         if (ctx.getMessage().getMentionedUsers().isEmpty()) {
-            ctx.getChannel().sendMessage(Emoji.ERROR + " Kindly mention the user you want to play with.").queue();
+            ctx.getChannel().sendMessage(Emojis.ERROR + " Kindly mention the user you want to play with.").queue();
             return;
         }
 
         if (ctx.getMessage().getMentionedUsers().get(0).isBot()) {
-            ctx.getChannel().sendMessage(Emoji.ERROR + " Kindly mention a user not a " + Emoji.DISCORD_BOT + ".").queue();
+            ctx.getChannel().sendMessage(Emojis.ERROR + " Kindly mention a user not a " + Emojis.DISCORD_BOT + ".").queue();
             return;
         }
         User mentionedUser = ctx.getMessage().getMentionedUsers().get(0);
@@ -38,7 +38,7 @@ public class ChessRequest implements ICommand {
         String userName = userPhoneUser.getUserPhoneUserName();
 
         if (userName == null) {
-            userName = ctx.getAuthor().getName() + "* (Unregistered " + Emoji.USER + " )";
+            userName = ctx.getAuthor().getName() + "* (Unregistered " + Emojis.USER + " )";
         } else {
             userName = userName + "*";
         }
@@ -58,7 +58,7 @@ public class ChessRequest implements ICommand {
 
         ctx.getChannel().sendMessage(mentionedUser.getAsMention()).queue();
 
-        EmojiObject emojiObject = Emoji.customEmojiToEmote(Emoji.CHECK);
+        EmojiObject emojiObject = Emojis.customEmojiToEmote(Emojis.CHECK);
 
         String messageID = ctx.getChannel().sendMessageEmbeds(embedBuilder.build()).setActionRow(Button.primary(mentionedUser.getId() + ":acceptChess", "Accept")
                 .withEmoji(net.dv8tion.jda.api.entities.Emoji.fromEmote(emojiObject.getEmojiName(), emojiObject.getEmojiID(), emojiObject.isAnimated()))).complete().getId();

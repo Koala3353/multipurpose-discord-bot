@@ -3,7 +3,7 @@ package com.general_hello.commands.commands.Info;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.GetData;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.Register.Data;
@@ -21,10 +21,10 @@ import java.util.Random;
 
 public class InfoUserCommand implements ICommand {
 
-    public final static String GUILD_ONLINE = Emoji.GUILD_ONLINE;
-    public final static String GUILD_IDLE = Emoji.GUILD_IDLE;
-    public final static String GUILD_DND = Emoji.GUILD_DND;
-    public final static String GUILD_OFFLINE = Emoji.GUILD_OFFLINE;
+    public final static String GUILD_ONLINE = Emojis.GUILD_ONLINE;
+    public final static String GUILD_IDLE = Emojis.GUILD_IDLE;
+    public final static String GUILD_DND = Emojis.GUILD_DND;
+    public final static String GUILD_OFFLINE = Emojis.GUILD_OFFLINE;
 
     @Override
     public void handle(CommandContext ctx) {
@@ -68,7 +68,7 @@ public class InfoUserCommand implements ICommand {
                 status = GUILD_OFFLINE;
                 break;
             default:
-                status = Emoji.GUILD_STREAMING;
+                status = Emojis.GUILD_STREAMING;
         }
         return status;
     }

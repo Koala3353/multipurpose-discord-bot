@@ -5,7 +5,7 @@ import com.general_hello.commands.Config;
 import com.general_hello.commands.Listener;
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.PrefixStoring;
 import net.objecthunter.exp4j.Expression;
@@ -42,25 +42,25 @@ public class MathCommand implements ICommand {
                 int integer = (int)result;
 
                 if(result >= 2147483647 || result <= -2147483647)
-                    e.getChannel().sendMessage(Emoji.ERROR +  " Calculation exceeds the range I am able to display!\n Range: `2147483647 ~ -2147483648`").queue();
+                    e.getChannel().sendMessage(Emojis.ERROR +  " Calculation exceeds the range I am able to display!\n Range: `2147483647 ~ -2147483648`").queue();
 
                 else if(result % 1 == 0)
                 {
-                    e.getChannel().sendMessage(Emoji.USER + "  `" + input + "` is  `"
+                    e.getChannel().sendMessage(Emojis.USER + "  `" + input + "` is  `"
                             + integer + "`").queue();
                 }
                 else
                 {
-                    e.getChannel().sendMessage(Emoji.USER + "  `" + input + "` is  `"
+                    e.getChannel().sendMessage(Emojis.USER + "  `" + input + "` is  `"
                             + result + "`").queue();
                 }
 
             } catch (IllegalArgumentException iae) {
-                e.getChannel().sendMessage(Emoji.ERROR + " " + iae.getLocalizedMessage().replace("'", "`") + ".").queue();
+                e.getChannel().sendMessage(Emojis.ERROR + " " + iae.getLocalizedMessage().replace("'", "`") + ".").queue();
             }catch (ArithmeticException ae) {
-                e.getChannel().sendMessage(Emoji.ERROR + " Do not divide a value by 0.").queue();
+                e.getChannel().sendMessage(Emojis.ERROR + " Do not divide a value by 0.").queue();
             } catch (RuntimeException rte) {
-                e.getChannel().sendMessage(Emoji.ERROR + " Please enter a valid math operation.").queue();
+                e.getChannel().sendMessage(Emojis.ERROR + " Please enter a valid math operation.").queue();
                 LOGGER.info(this.getClass().getName(), "Invalid operation \"" + input + "\"");
             }
         }

@@ -4,6 +4,7 @@ import com.general_hello.commands.CommandManager;
 import com.general_hello.commands.Config;
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.Info.InfoUserCommand;
 import com.general_hello.commands.commands.PrefixStoring;
@@ -37,12 +38,13 @@ public class HelpCommand implements ICommand {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle("Groups");
             embedBuilder.setColor(Color.cyan);
-            embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.USER + " | User (10)", "Shows basic to complex commands that the user can do with the bot", false);
-            embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.DISCORD_BOT + " | Bot (3)", "Shows the commands you can do with the bot", false);
-            embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.INFO + " | Info (3)", "Shows basic to complex information about users, servers, or mods", false);
-            embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.MOD + " | Moderation (4)","Basic to advanced moderation tools used by staff to control or monitor the server.", false);
-            embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.MUSIC + " | Music (15+)","Basic to advanced music commands. (Do ignt musichelp to see the help for music)", false);
-            embedBuilder.addField(com.general_hello.commands.commands.Emoji.Emoji.GAME + " | Games (6)","Fun games.", false);
+            embedBuilder.addField(Emojis.igntCoins + " | Currency (10)", "Shows basic to complex commands that the user can do with their currency", false);
+            embedBuilder.addField(Emojis.USER + " | User (10)", "Shows basic to complex commands that the user can do with the bot", false);
+            embedBuilder.addField(Emojis.DISCORD_BOT + " | Bot (3)", "Shows the commands you can do with the bot", false);
+            embedBuilder.addField(Emojis.INFO + " | Info (3)", "Shows basic to complex information about users, servers, or mods", false);
+            embedBuilder.addField(Emojis.MOD + " | Moderation (4)","Basic to advanced moderation tools used by staff to control or monitor the server.", false);
+            embedBuilder.addField(Emojis.MUSIC + " | Music (15+)","Basic to advanced music commands. (Do ignt musichelp to see the help for music)", false);
+            embedBuilder.addField(Emojis.GAME + " | Games (6)","Fun games.", false);
             embedBuilder.addField("\uD83D\uDCDA | RPG (?)","Fun RPG commands for igniters", false);
 
             embedBuilder.setFooter("Type " + prefix + " help [group name] to see their commands");
@@ -51,6 +53,7 @@ public class HelpCommand implements ICommand {
 
             channel.sendMessageEmbeds(embedBuilder.build()).setActionRows(
                     ActionRow.of(
+                        Button.secondary(ctx.getMember().getUser().getId() + ":currency", "Currency").withEmoji(Emoji.fromEmote("ignt_coins", 905999722374905857L, false)),
                         Button.secondary(ctx.getMember().getUser().getId() + ":user", "User").withEmoji(Emoji.fromEmote("user", Long.parseLong("862895295239028756"), true)),
                         Button.secondary(ctx.getMember().getUser().getId() + ":bot", "Bot").withEmoji(Emoji.fromEmote("discord_bot", Long.parseLong("862895574960701440"), false)),
                         Button.secondary(ctx.getMember().getUser().getId() + ":info", "Info").withEmoji(Emoji.fromEmote("info", Long.parseLong("870871190217060393"), true)),

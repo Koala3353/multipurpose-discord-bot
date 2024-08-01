@@ -2,7 +2,7 @@ package com.general_hello.commands.commands.MusicPlainCommand;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import com.general_hello.commands.commands.Music.AudioManager;
 import com.general_hello.commands.commands.Music.ButtonPaginator;
@@ -57,7 +57,7 @@ public class QueueCommand implements ICommand
         int finalPage = page;
         ctx.getMessage().replyEmbeds(new EmbedBuilder()
                 .setColor(0x452350)
-                .setDescription(Emoji.LOADING + " Loading...")
+                .setDescription(Emojis.LOADING + " Loading...")
                 .build())
                 .queue(hook -> hook.editMessageEmbeds().queue(message -> builder.build().paginate(message, finalPage)));
     }

@@ -37,6 +37,11 @@ public class BlackjackCommand implements ICommand {
             return;
         }
 
+        if (Integer.parseInt(e.getArgs().get(0)) > 300_000) {
+            e.getChannel().sendMessage("You can bid a maximum of 300,000 only!").queue();
+            return;
+        }
+
          BlackjackGame objg = GameHandler.getBlackJackGame(playerId);
                 if (objg == null) {
                     BlackjackGame bjg = new BlackjackGame(Integer.parseInt(e.getArgs().get(0)));

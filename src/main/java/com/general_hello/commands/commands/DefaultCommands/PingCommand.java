@@ -2,7 +2,7 @@ package com.general_hello.commands.commands.DefaultCommands;
 
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import net.dv8tion.jda.api.JDA;
 
@@ -14,7 +14,7 @@ public class PingCommand implements ICommand {
         jda.getRestPing().queue(
                 (ping) -> ctx.getChannel()
                         .sendMessageFormat("Server Night:\n" +
-                                "Ping: %sms " + Emoji.LOADING, ping).queue()
+                                "Ping: %sms " + Emojis.LOADING, ping).queue()
         );
     }
 

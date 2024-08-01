@@ -48,6 +48,7 @@ public class GetData {
 
         while (x < members.size()) {
             Member user = members.get(x);
+            Data.users.add(members.get(x).getUser());
 
             if (!Data.userUserPhoneUserHashMap.containsKey(user)) {
                 retrieveData(user.getIdLong(), ctx);

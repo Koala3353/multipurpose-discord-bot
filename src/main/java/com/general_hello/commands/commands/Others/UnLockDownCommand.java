@@ -3,7 +3,7 @@ package com.general_hello.commands.commands.Others;
 import com.general_hello.commands.Config;
 import com.general_hello.commands.commands.CommandContext;
 import com.general_hello.commands.commands.CommandType;
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.ICommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -41,7 +41,7 @@ public class UnLockDownCommand implements ICommand {
             x++;
         }
 
-        ctx.getChannel().sendMessage("Lockdown is now ceased! For " + y + " users " + Emoji.USER).queue();
+        ctx.getChannel().sendMessage("Lockdown is now ceased! For " + y + " users " + Emojis.USER).queue();
     }
 
     @Override
