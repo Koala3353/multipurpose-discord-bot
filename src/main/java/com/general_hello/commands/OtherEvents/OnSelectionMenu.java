@@ -2,6 +2,7 @@ package com.general_hello.commands.OtherEvents;
 
 import com.general_hello.commands.Config;
 import com.general_hello.commands.Database.DatabaseManager;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import com.general_hello.commands.commands.GroupOfGames.Games.TriviaCommand;
 import com.general_hello.commands.commands.Info.InfoUserCommand;
 import com.general_hello.commands.commands.PrefixStoring;
@@ -39,7 +40,7 @@ public class OnSelectionMenu extends ListenerAdapter {
             String answer = TriviaCommand.storeAnswer.get(event.getUser());
             String question = TriviaCommand.storeQuestion.get(event.getUser());
             String difficulty = TriviaCommand.storeDifficulty.get(event.getUser());
-            int reward = 1000;
+            int reward = 10000;
 
             int multiplier = difficulty.equals("medium") ? 3 : 1;
             multiplier = difficulty.equals("hard") ? 5 : multiplier;
@@ -49,7 +50,8 @@ public class OnSelectionMenu extends ListenerAdapter {
             if (event.getSelectedOptions().get(0).getValue().equals(answer)) {
                 event.getChannel().sendMessage("Correct answer!!!!\n" +
                         "You got \uD83E\uDE99 " + reward + " for getting the correct answer!\n" +
-                        "Question: `" + question + "`").queue();
+                        "Question: `" + question + "`\n" +
+                        "Answer: ```" + answer + "```").queue();
                 LevelPointManager.feed(event.getUser(), 25);
                 DatabaseManager.INSTANCE.setCredits(event.getUser().getIdLong(), reward);
                 event.deferEdit().queue();
@@ -60,7 +62,7 @@ public class OnSelectionMenu extends ListenerAdapter {
                 e.setTitle("Incorrect answer");
                 e.setFooter("A correct answer gives you \uD83E\uDE99 " + reward);
                 e.addField("Question: `" + question + "`\n" + "Difficulty: **" + difficulty +
-                        "**\nThe correct answer is " + TriviaCommand.storeAnswer.get(event.getUser()), "Better luck next time", false).setColor(Color.RED);
+                        "**\n\nThe correct answer is " + TriviaCommand.storeAnswer.get(event.getUser()), "Better luck next time", false).setColor(Color.RED);
                 event.getChannel().sendMessageEmbeds(e.build()).queue();
                 event.getMessage().delete().queue();
                 TriviaCommand.storeAnswer.remove(event.getUser());
@@ -81,9 +83,9 @@ public class OnSelectionMenu extends ListenerAdapter {
                 case "old":
                     embedBuilder = new EmbedBuilder().setTitle("Rules").setColor(InfoUserCommand.randomColor());
                     String arrow = "<a:arrow_1:862525611465113640>";
-                    String message = arrow + " THIS IS A CHRISTIAN COMMUNITY SERVER. That means, we value the things Christ teaches us! " + com.general_hello.commands.commands.Emoji.Emoji.USER + " Let us try our best to exemplify Christlikness in all that we do here! " + com.general_hello.commands.commands.Emoji.Emoji.CHECK + "\n" +
+                    String message = arrow + " THIS IS A CHRISTIAN COMMUNITY SERVER. That means, we value the things Christ teaches us! " + Emojis.USER + " Let us try our best to exemplify Christlikness in all that we do here! " + Emojis.CHECK + "\n" +
                             "\n" +
-                            arrow + " THIS GROUP IS FOR HIGH SCHOOL STUDENTS ONLY. High schoolers and Ignite friends (like your Ahyas and Achis) are the only ones allowed to join this server. This is to ensure your safety and security! " + com.general_hello.commands.commands.Emoji.Emoji.MOD + "\n" +
+                            arrow + " THIS GROUP IS FOR HIGH SCHOOL STUDENTS ONLY. High schoolers and Ignite friends (like your Ahyas and Achis) are the only ones allowed to join this server. This is to ensure your safety and security! " + Emojis.MOD + "\n" +
                             "\n" +
                             arrow + " INVITE HIGH SCHOOLERS TO JOIN OUR PROGRAMS! COIL was made to provide an avenue for high school students to connect in a safe, Christian community! Let's help our community grow by inviting your friends to hangout with us! \n" +
                             "\n" +
@@ -114,7 +116,7 @@ public class OnSelectionMenu extends ListenerAdapter {
                     event.getChannel().sendMessageEmbeds(helpCrap(4, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferEdit().queue();
                     break;
-                case "chess":
+                case "hangman":
                     event.getMessage().delete().queue();
                     event.getChannel().sendMessageEmbeds(helpCrap(5, event).build()).setActionRows(ActionRow.of(menu), ActionRow.of(Button.of(ButtonStyle.DANGER, "0000:backgames", "Back"))).queue();
                     event.deferEdit().queue();
@@ -164,10 +166,10 @@ public class OnSelectionMenu extends ListenerAdapter {
                 embedBuilder.setFooter("Type " + prefix + " help [command name] to see what they do");
                 break;
             case 5:
-                embedBuilder.setTitle("Chess Commands");
+                embedBuilder.setTitle("Hangman Commands");
                 embedBuilder.setColor(Color.CYAN);
-                embedBuilder.setDescription("Unknown!\n" +
-                        "Chess is still being programmed!");
+                embedBuilder.addField("1.) Start a Hangman Game Command", "`" + prefix + " hangman-start`", false);
+                embedBuilder.addField("2.) Reset hangman Command", "`" + prefix + " hangman-reset`", false);
                 embedBuilder.setFooter("Type " + prefix + " help [command name] to see what they do");
                 break;
             case 6:
