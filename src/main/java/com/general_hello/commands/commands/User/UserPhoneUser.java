@@ -5,8 +5,9 @@ import net.dv8tion.jda.api.entities.User;
 public class UserPhoneUser implements Comparable <UserPhoneUser>{
     private String userPhoneUserName;
     private Integer balance;
-    private final User discordUser;
     private Integer credits;
+
+    private final User discordUser;
 
     public UserPhoneUser(String userPhoneUserName, User discordUser, Integer credits) {
         this.userPhoneUserName = userPhoneUserName;
@@ -27,12 +28,9 @@ public class UserPhoneUser implements Comparable <UserPhoneUser>{
     }
 
     public Integer getCredits() {
-        return DatabaseManager.INSTANCE.getCredits(discordUser.getIdLong());
-    }
-
-    public void addCredits(Integer credits) {
-        this.credits += credits;
-        DatabaseManager.INSTANCE.setCredits(discordUser.getIdLong(), this.credits += credits);
+        int credits = DatabaseManager.INSTANCE.getCredits(discordUser.getIdLong());
+        this.credits = credits;
+        return credits;
     }
 
     public void setBalance(Integer balance) {

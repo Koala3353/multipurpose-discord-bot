@@ -1,5 +1,6 @@
 package com.general_hello.commands.commands.RankingSystem;
 
+import com.general_hello.commands.Database.DatabaseManager;
 import com.general_hello.commands.commands.GetData;
 import net.dv8tion.jda.api.entities.User;
 
@@ -77,9 +78,19 @@ public class LevelPointManager{
                 System.out.println("Added member :)");
                 trackMember(member);
             }
+            long level = calculateLevel(member);
 
             GetData.setLevelPoints(member, GetData.getLevelPoints(member) + xpToAdd);
+            long nowlevel = calculateLevel(member);
             System.out.println("Added xp to " + member.getName() + "!");
+
+            if (level < nowlevel) {
+                member.openPrivateChannel().queue((privateChannel -> {
+                    long nowlevel1 = nowlevel*1000;
+                    privateChannel.sendMessage("Congratulation! You are now in level " + nowlevel + "!!! **" + nowlevel1 + " credits** has been added to you!!!").queue();
+                    DatabaseManager.INSTANCE.setCredits(member.getIdLong(), (int) nowlevel1);
+                }));
+            }
         }
         catch(Exception ignore){
         }

@@ -1,6 +1,6 @@
 package com.general_hello.commands.commands.Utils;
 
-import com.general_hello.commands.commands.Emoji.Emoji;
+import com.general_hello.commands.commands.Emoji.Emojis;
 import net.dv8tion.jda.api.OnlineStatus;
 
 /**
@@ -19,7 +19,7 @@ public class UtilBot {
         String status = "";
         switch (stat) {
             case ONLINE:
-                status = Emoji.GUILD_ONLINE;
+                status = Emojis.GUILD_ONLINE;
                 break;
             case IDLE:
                 status = "🌙";
@@ -28,7 +28,7 @@ public class UtilBot {
                 status = "🔴";
                 break;
             default:
-                status = Emoji.GUILD_OFFLINE;
+                status = Emojis.GUILD_OFFLINE;
         }
         return status;
     }
