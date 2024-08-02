@@ -1,7 +1,7 @@
 # Multi-purpose Discord Bot
 This is a multipurpose discord bot with multiple functionalities from utilities to games and more! It is an `admin bot`, `music bot`, `trivia bot`, and all other features! This repository is made in **java** with **JDA** and **JDA-utils**.
 
-**The Discord bot has: (non-exhaustive list):**
+**The Discord bot has: (non-exhaustive list):**<br />
 ✉️ Support for commands in direct messages *soon* <br />
 ⚙️ Guild configuration (prefix, ignored channels, etc...) <br />
 😀 Commands made pleasant thanks to the many emojis <br />
